@@ -1,0 +1,262 @@
+body {
+  // background: #f0f8ff;
+
+  .logo {
+    position: absolute;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    margin-top: 5px;
+    margin-left: -10px;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .rs-navbar-subtle {
+    border-bottom: 1px solid #ccc;
+  }
+
+  .rs-panel-group > .rs-panel + .rs-panel::before {
+    border-top: none;
+  }
+  .rs-panel-collapsible > .rs-panel-heading::before {
+    top: 10px;
+    right: 0;
+  }
+
+  .rs-panel-heading,
+  .rs-panel-body {
+    padding: 0;
+  }
+
+  .rs-panel-heading {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    line-height: normal;
+  }
+
+  .custom-modal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: 100%;
+    z-index: 5000;
+    display: none;
+  }
+
+  .side-menu {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 35%;
+    height: 100%;
+    background: #f5f6fa;
+    .inner {
+      width: 200px;
+      float: right;
+      padding-right: 20px;
+      h4 {
+        margin-top: 5px;
+        margin-bottom: 30px;
+      }
+    }
+
+    .rs-panel-title {
+      color: #3498ff;
+    }
+
+    a {
+      &:hover {
+        color: #7a7a7a;
+      }
+      padding-left: 10px;
+      color: #272c36;
+      font-size: 14px;
+      margin-bottom: 8px;
+      text-decoration: none;
+      display: block;
+
+      &.active {
+        font-weight: bold;
+      }
+    }
+
+    .section-button {
+      margin-bottom: 20px;
+    }
+  }
+
+  .content {
+    float: left;
+    width: 65%;
+    margin-left: 35%;
+
+    .header {
+      border-bottom: 1px solid #ccc;
+      .search {
+        width: 500px;
+
+        input {
+          width: 500px;
+          border: none;
+          border-radius: 0;
+
+          &:focus {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            z-index: 6000;
+            outline: none;
+          }
+        }
+      }
+
+      .user {
+        float: right;
+        margin-top: -40px;
+        padding-right: 15px;
+      }
+    }
+
+    .search-result {
+      position: relative;
+      background-color: #fff;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      transition: 0.3s;
+      max-width: 500px;
+      min-height: 200px;
+      max-height: 800px;
+      z-index: 6000;
+      padding: 15px;
+      overflow: auto;
+    }
+
+    .inner {
+      padding: 15px;
+    }
+
+    .footer {
+      padding: 15px;
+      display: none;
+    }
+  }
+
+  .brands {
+    margin-top: 30px;
+    img {
+      height: 40px;
+      margin-right: 30px;
+    }
+  }
+
+  margin-bottom: 15px;
+  .org-card {
+    padding: 10px;
+    text-align: center;
+
+    p {
+      margin-bottom: 30px;
+    }
+  }
+
+  .container {
+    width: 1000px;
+    margin: 0 auto;
+  }
+
+  .notify {
+    display: block;
+    background: #fff;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+
+    p {
+      color: #444;
+      font-size: 18px;
+    }
+
+    span {
+      color: #999;
+    }
+
+    &:hover {
+      background: #f9f9f9;
+    }
+  }
+
+  .block-page {
+    max-width: 500px;
+    margin: 0 auto;
+    margin-top: 30px;
+    background: white;
+    padding: 10px;
+    border-radius: 4px;
+
+    h5 {
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+
+      span {
+        font-weight: normal;
+      }
+    }
+  }
+
+  .login {
+    margin: 20%;
+    background-color: #fff;
+    border-radius: 5px;
+  }
+
+  .space {
+    height: 100px;
+    display: block;
+  }
+
+  .space-50 {
+    height: 50px;
+    display: block;
+  }
+
+  .space-20 {
+    height: 20px;
+    display: block;
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  .right {
+    float: right;
+  }
+
+  .mobile {
+    display: none;
+  }
+
+  .desktop {
+    display: inline-block;
+  }
+
+  @media (max-width: 768px) {
+    .login {
+      width: 100%;
+      margin: 10px;
+    }
+
+    .mobile {
+      display: inline-block;
+    }
+
+    .container {
+      width: 100% !important;
+      padding: 10px;
+    }
+  }
+}

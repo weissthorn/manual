@@ -1,0 +1,49 @@
+{
+  "name": "manual",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Olalekan Animashaun",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev -p 2301",
+    "build": "next build",
+    "start": "npm run build && pm2 start ./src/app.js -n 'manual'",
+    "staging": "npm run build && pm2 reload ./src/app.js -n 'manual' --update-env",
+    "production": "npm run build && pm2 reload ./src/app.js -n 'manual' --update-env",
+    "start_db": "rethinkdb --bind all",
+    "fix_style": "stylelint '**/*.scss' --syntax scss --fix"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "helmet": "^4.4.1",
+    "moment": "^2.29.1",
+    "morgan": "^1.10.0",
+    "next": "^10.2.3",
+    "nookies": "^2.5.2",
+    "react": ">=0.13",
+    "react-dom": "^16.12.0",
+    "rsuite": "^4.1.5",
+    "signale": "^1.4.0",
+    "slugify": "^1.5.3",
+    "suneditor-react": "^2.16.5",
+    "thinky": "^2.3.9",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.20.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1",
+    "sass": "^1.32.11",
+    "stylelint": "^13.13.0",
+    "stylelint-config-standard-scss": "^1.1.0",
+    "stylelint-order": "^4.1.0",
+    "stylelint-scss": "^3.19.0",
+    "supertest": "^4.0.2"
+  }
+}
