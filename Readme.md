@@ -1,4 +1,4 @@
-## Chatbot web
+## Manual
 
 ##### Environment setup
 
