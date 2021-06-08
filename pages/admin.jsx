@@ -345,12 +345,12 @@ export default function Admin() {
                 onChange={handleSearch}
               />
               <br />
-
+              <h3>{users.length <= 1 ? 'User' : 'Users'}</h3>
               <Button appearance="default" onClick={toggleModal}>
                 + Add user
               </Button>
             </div>
-            <Table loading={loading} height={420} data={users}>
+            <Table loading={loading} height={600} data={users}>
               <Column width={200} fixed>
                 <HeaderCell>Name</HeaderCell>
                 <Cell dataKey="name" />
