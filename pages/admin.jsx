@@ -2,7 +2,7 @@ import { Container, Content, InputPicker, Table, Input, Modal, Button, Alert } f
 const { Column, HeaderCell, Cell } = Table;
 import Header from '../components/Header';
 import moment from 'moment';
-import React from 'react';
+import React, { Profiler } from 'react';
 
 export default function Admin() {
   const [loading, setLoading] = React.useState(false);
@@ -11,6 +11,7 @@ export default function Admin() {
   const [modal2, setModal2] = React.useState(false);
   const [users, setUsers] = React.useState([]);
   const [user, setUser] = React.useState({});
+  const [profile, setProfile] = React.useState({});
   const [notify, setNotify] = React.useState();
 
   React.useEffect(() => {
@@ -27,7 +28,7 @@ export default function Admin() {
 
   const getUsers = async () => {
     setLoading(true);
-    const url = `api/users?page=1&limit=1000`;
+    const url = `/api/users?page=1&limit=1000`;
     await fetch(url, {
       headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
     })
@@ -44,7 +45,7 @@ export default function Admin() {
 
   const searchUser = async (query) => {
     setLoading(true);
-    const url = `api/users/search?query=${query}&page=1&limit=1000`;
+    const url = `/api/users/search?query=${query}&page=1&limit=1000`;
     await fetch(url, {
       headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
     })
@@ -75,34 +76,33 @@ export default function Admin() {
   };
 
   const handleName = (value) => {
-    console.log(value);
-    user.name = value;
-    setUser(user);
+    profile.name = value;
+    setProfile(profile);
   };
 
   const handleEmail = (value) => {
-    user.email = value;
-    setUser(user);
+    profile.email = value;
+    setProfile(profile);
   };
 
   const handlePassword = (value) => {
-    user.password = value;
-    setUser(user);
+    profile.password = value;
+    setProfile(profile);
   };
 
   const handleRoleChange = (value) => {
-    user.role = value;
-    setUser(user);
+    profile.role = value;
+    setProfile(profile);
   };
 
   const handleBannedChange = (value) => {
-    user.banned = value;
-    setUser(user);
+    profile.status = value;
+    setProfile(profile);
   };
 
   const addUser = async (form) => {
     setLoading(true);
-    const url = `api/users/create`;
+    const url = `/api/users/create`;
     await fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
@@ -124,7 +124,7 @@ export default function Admin() {
 
   const updateUser = async (form) => {
     setLoading(true);
-    const url = `api/users/update`;
+    const url = `/api/users/update`;
     await fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
@@ -135,7 +135,8 @@ export default function Admin() {
         if (res.success) {
           setLoading(false);
           getUsers();
-          toggleModal();
+          setProfile({});
+          toggleModal2();
         } else {
           setNotify(res.error);
           setLoading(false);
@@ -144,9 +145,10 @@ export default function Admin() {
   };
 
   const edit = (id) => {
-    let user = users.filter((item) => item.id == id);
-    user = user[0];
-    setUser(user);
+    let editUser = users.filter((item) => item.id == id);
+    editUser = editUser[0];
+
+    setProfile(editUser);
     toggleModal2();
   };
 
@@ -172,6 +174,7 @@ export default function Admin() {
     } else if (!role) {
       setNotify('Choose a role!');
     } else {
+      setNotify('');
       addUser(form);
     }
   };
@@ -179,13 +182,7 @@ export default function Admin() {
   const saveEdit = (e) => {
     e.preventDefault();
 
-    let field,
-      form = user;
-    field = document.querySelectorAll('.user2');
-    field.forEach((item) => {
-      let { name, value } = item;
-      form[name] = value;
-    });
+    let form = profile;
 
     if (!form.name) {
       setNotify('Name is too short !');
@@ -194,6 +191,7 @@ export default function Admin() {
     } else if (!form.role) {
       setNotify('Choose a role!');
     } else {
+      setNotify('');
       updateUser(form);
     }
   };
@@ -266,7 +264,7 @@ export default function Admin() {
               type="name"
               name="name"
               onChange={handleName}
-              value={user.name}
+              defaultValue={profile.name}
               className="user2"
             />
             <br />
@@ -275,7 +273,7 @@ export default function Admin() {
               type="email"
               name="email"
               onChange={handleEmail}
-              value={user.email}
+              defaultValue={profile.email}
               className="user2"
             />
             <br />
@@ -294,7 +292,7 @@ export default function Admin() {
                 { label: 'Editor', value: 'editor' },
                 { label: 'Reader', value: 'reader' },
               ]}
-              value={user.role}
+              defaultValue={profile.role}
               placeholder="Role"
               block
               required
@@ -307,7 +305,7 @@ export default function Admin() {
                 { label: 'Active', value: 'active' },
                 { label: 'Not active', value: 'not active' },
               ]}
-              value={user.status}
+              defaultValue={profile.status}
               placeholder="Active or not active?"
               block
               required
@@ -337,19 +335,27 @@ export default function Admin() {
           <br />
           <div>
             <div>
-              <Input
-                size="lg"
-                type="search"
-                placeholder="Search using name, email...."
-                style={{ width: 400 }}
-                onChange={handleSearch}
-              />
-              <br />
-              <h3>{users.length <= 1 ? 'User' : 'Users'}</h3>
-              <Button appearance="default" onClick={toggleModal}>
-                + Add user
-              </Button>
+              <div style={{ float: 'right' }}>
+                <Input
+                  size="lg"
+                  type="search"
+                  placeholder="Search using name, email...."
+                  style={{ width: 400 }}
+                  onChange={handleSearch}
+                />
+              </div>
+
+              <h4>
+                {users.length}
+                {users.length <= 1 ? ' User' : ' Users'}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <Button appearance="default" onClick={toggleModal}>
+                  + Add user
+                </Button>
+              </h4>
             </div>
+            <br />
+            <br />
+
             <Table loading={loading} height={600} data={users}>
               <Column width={200} fixed>
                 <HeaderCell>Name</HeaderCell>
@@ -369,7 +375,7 @@ export default function Admin() {
                 <HeaderCell>Date</HeaderCell>
                 <Cell>
                   {(rowData) => {
-                    return <span>{moment(rowData.createdAt).format('MMM D,YYYY @ h:mm A')}</span>;
+                    return <span>{moment(rowData.createdAt).format('MMM D, YYYY @ h:mm A')}</span>;
                   }}
                 </Cell>
               </Column>

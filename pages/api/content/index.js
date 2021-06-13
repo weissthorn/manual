@@ -1,12 +1,12 @@
-import { r, Manual } from '../../../model';
+import { r, Content } from '../../../model';
 import { withAuth } from '../../../util';
 import logger from '../../../util/log';
 import moment from 'moment';
 
-const getManuals = async (req, res) => {
+const getContents = async (req, res) => {
   await withAuth(req, res);
 
-  Manual.orderBy(r.desc('createdAt'))
+  Content.orderBy(r.desc('createdAt'))
     .getJoin()
     .then((data) => {
       data = data.slice().sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix());
@@ -15,4 +15,4 @@ const getManuals = async (req, res) => {
     .catch((err) => logger(err));
 };
 
-export default getManuals;
+export default getContents;

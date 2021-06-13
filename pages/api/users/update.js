@@ -17,6 +17,14 @@ const updateUser = async (req, res) => {
         })
         .catch((err) => logger(err));
     });
+  } else {
+    User.get(req.body.id)
+      .update(req.body)
+      .then((data) => {
+        data.success = true;
+        res.send(data);
+      })
+      .catch((err) => logger(err));
   }
 };
 

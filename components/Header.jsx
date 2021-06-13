@@ -1,10 +1,20 @@
+import React from 'react';
 import { Header, Navbar, Dropdown, Nav, Icon } from 'rsuite';
 import Head from 'next/head';
 import { parseCookies, destroyCookie } from 'nookies';
+import { useRouter } from 'next/router';
+
 export default function MainHeader({ title, description }) {
+  const router = useRouter();
+
+  // React.useEffect(() => {
+  //   let user = parseCookies();
+  //   user = user && user._auth ? router.push('/login') : null;
+  // }, []);
+
   const logout = () => {
     destroyCookie(null, '_auth');
-    window.location.href = '/login';
+    router.push('/login');
   };
 
   const isLoggedIn = () => {

@@ -1,25 +1,30 @@
-import React from "react"
+import React from 'react';
 import { Dropdown, Nav, Icon } from 'rsuite';
 import Head from 'next/head';
-import { parseCookies, setCookie, destroyCookie } from 'nookies'
+import { useRouter } from 'next/router';
+import { parseCookies, destroyCookie } from 'nookies';
 
 export default function ManualHeader({ title, description }) {
-  const [user, setUser] = React.useState({});
+  const router = useRouter();
 
   React.useEffect(() => {
-
-      const cookies = parseCookies()
-  console.log({ cookies });
-    let profile = window.localStorage.getItem('_aut');
-    profile = profile ? JSON.parse(profile) : {};
-    setUser(profile)
-  }, [])
+    let user = parseCookies();
+    console.log(user && user._auth);
+    // user = user && user._auth ? router.push('/login') : null;
+  }, []);
 
   const logout = () => {
-    destroyCookie(null, "_auth");
-    window.location.href = '/login';
+    destroyCookie(null, '_auth');
+    router.push('/login');
   };
 
+  const isLoggedIn = () => {
+    let user = parseCookies();
+    user = user && user._auth ? JSON.parse(user._auth) : {};
+    return user;
+  };
+
+  const user = isLoggedIn();
 
   return (
     <span className="user">

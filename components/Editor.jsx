@@ -1,3 +1,4 @@
+import React from 'react';
 import SunEditor, { buttonList } from 'suneditor-react';
 
 import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
@@ -40,7 +41,7 @@ export default function Editor({ value, onChange }) {
           ],
         }}
         defaultValue={value}
-        onKeyUp={onChange}
+        onChange={onChange}
       />
     </div>
   );
