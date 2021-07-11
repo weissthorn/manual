@@ -1,8 +1,10 @@
+import React from 'react';
 import { Container, Content, InputPicker, Table, Input, Modal, Button, Alert } from 'rsuite';
 const { Column, HeaderCell, Cell } = Table;
 import Header from '../components/Header';
 import moment from 'moment';
-import React, { Profiler } from 'react';
+import { parseCookies } from 'nookies';
+import { useRouter } from 'next/router';
 
 export default function Admin() {
   const [loading, setLoading] = React.useState(false);
@@ -17,6 +19,8 @@ export default function Admin() {
   React.useEffect(() => {
     getUsers();
   }, []);
+
+  const isLoggedIn = () => {};
 
   const toggleModal = () => {
     setModal(!modal);
@@ -115,6 +119,7 @@ export default function Admin() {
           getUsers();
           setUser({});
           toggleModal();
+          Alert.info("User added", 5000);
         } else {
           setNotify(res.error);
           setLoading(false);
@@ -137,6 +142,7 @@ export default function Admin() {
           getUsers();
           setProfile({});
           toggleModal2();
+            Alert.info("User detail updated", 5000);
         } else {
           setNotify(res.error);
           setLoading(false);
@@ -411,3 +417,9 @@ export default function Admin() {
     </div>
   );
 }
+
+Admin.getInitialProps = async () => {
+  let cookie = await parseCookies();
+  console.log(cookie);
+  return cookie;
+};

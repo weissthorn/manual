@@ -7,10 +7,10 @@ import { useRouter } from 'next/router';
 export default function MainHeader({ title, description }) {
   const router = useRouter();
 
-  // React.useEffect(() => {
-  //   let user = parseCookies();
-  //   user = user && user._auth ? router.push('/login') : null;
-  // }, []);
+  React.useEffect(() => {
+     const cookie = parseCookies();
+    !cookie._auth ? router.push('/login') : null;
+  }, []);
 
   const logout = () => {
     destroyCookie(null, '_auth');

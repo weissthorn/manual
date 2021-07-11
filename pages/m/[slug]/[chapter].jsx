@@ -243,7 +243,7 @@ export default function Manual() {
     .sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix())
     .reverse();
   sections = sections.map((item, key) => (
-    <Panel defaultExpanded header={item.title} key={key}>
+    <Panel defaultExpanded={item.contents.length ? true: false} header={item.title} key={key}>
       {getContent(item.contents, manual.slug)}
       <IconButton
         size="xs"
@@ -325,7 +325,7 @@ export default function Manual() {
             icon={<Icon icon="plus" />}
             placement="left"
             onClick={toggleModal}
-            style={{ display: user.role !== 'reader' ? 'block' : 'none' }}
+            style={{ display: user && user.role !== 'reader' ? 'block' : 'none' }}
           >
             Add section
           </IconButton>

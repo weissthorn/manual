@@ -48,6 +48,10 @@ yarn production
 - Intelligent content navigation.
 - 100% Responsiveness.
 - Edit history
+- AWS marketplace
+- Digital Ocean app
+- Docker image
+- Vagrant box
 
 ##### Maintainer
 

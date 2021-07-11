@@ -45,6 +45,7 @@ export default function Manuals() {
           setLoading(false);
           getManuals();
           toggleModal();
+            Alert.info("Manual created successfully", 5000)
         } else {
           setNotify(res.error);
           setLoading(false);
