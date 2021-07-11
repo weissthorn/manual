@@ -86,7 +86,7 @@ export default function Manual() {
 
   const searchManual = async (q) => {
     setLoading(true);
-    const url = `/api/search?query=${q}`;
+    const url = `/api/search?query=${q}&manualId=${manual.id}`;
     await fetch(url, {
       headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
     })
@@ -110,9 +110,36 @@ export default function Manual() {
       .sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix())
       .reverse();
     let url = contents.map((item, key) => (
-      <Link href={`/m/${title}/${item.slug}`} id={`${item.slug}`} key={key}>
-        <a className={`${chapter === item.slug ? 'active' : ''}`}>{item.title}</a>
-      </Link>
+      <a
+        href={`/m/${title}/${item.slug}`}
+        id={`${item.slug}`}
+        key={key}
+        className={`${chapter === item.slug ? 'active' : ''}`}
+      >
+        {item.title}
+      </a>
+    ));
+
+    return url;
+  };
+
+  const getSearch = (contents, title) => {
+    const { chapter } = router.query;
+    contents = contents && contents.length ? contents : [];
+    contents = contents
+      .sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix())
+      .reverse();
+    let url = contents.map((item, key) => (
+      <div key={key}>
+        <a
+          href={`/m/${title}/${item.slug}`}
+          id={`${item.slug}`}
+          className={`${chapter === item.slug ? 'active' : ''}`}
+          style={{ paddingLeft: 5 }}
+        >
+          {item.title}
+        </a>
+      </div>
     ));
 
     return url;
@@ -242,7 +269,7 @@ export default function Manual() {
     .sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix())
     .reverse();
   sections = sections.map((item, key) => (
-    <Panel defaultExpanded={item.contents.length ? true: false} header={item.title} key={key}>
+    <Panel defaultExpanded={item.contents.length ? true : false} header={item.title} key={key}>
       {getContent(item.contents, manual.slug)}
       <IconButton
         size="xs"
@@ -267,25 +294,26 @@ export default function Manual() {
       >
         &nbsp;
       </div>
-      <div
-        className="custom-modal"
-        style={{  display: menu ? 'block' : 'none' }}
-        
-      >
-       <div className="side-menu mobile">
-       <div className="inner">
-          <h4>{manual.title} <span className="icon-menu" onClick={toggleMenu}><Icon icon="close" size={"2x"} /></span></h4>
-          <IconButton
-            appearance="subtle"
-            icon={<Icon icon="plus" />}
-            placement="left"
-            onClick={toggleModal}
-            style={{ display:  user && user.role !== 'reader' ? 'block' : 'none' }}
-          >
-            Add section
-          </IconButton>
-          <PanelGroup accordion>{sections}</PanelGroup>
-        </div>
+      <div className="custom-modal" style={{ display: menu ? 'block' : 'none' }}>
+        <div className="side-menu mobile">
+          <div className="inner">
+            <h4>
+              {manual.title}{' '}
+              <span className="icon-menu" onClick={toggleMenu}>
+                <Icon icon="close" size={'2x'} />
+              </span>
+            </h4>
+            <IconButton
+              appearance="subtle"
+              icon={<Icon icon="plus" />}
+              placement="left"
+              onClick={toggleModal}
+              style={{ display: user && user.role !== 'reader' ? 'block' : 'none' }}
+            >
+              Add section
+            </IconButton>
+            <PanelGroup accordion>{sections}</PanelGroup>
+          </div>
         </div>
       </div>
 
@@ -340,19 +368,22 @@ export default function Manual() {
 
       <div className="side-menu">
         <div className="inner">
-          <span className="menu mobile" onClick={toggleMenu}><Icon icon="bars" size={"2x"} /></span>
+          <span className="menu mobile" onClick={toggleMenu}>
+            <Icon icon="bars" size={'2x'} />
+          </span>
           <div className="desktop">
-          <h4>{manual.title}</h4>
-          <IconButton
-            appearance="subtle"
-            icon={<Icon icon="plus" />}
-            placement="left"
-            onClick={toggleModal}
-            style={{ display:  user && user.role !== 'reader' ? 'block' : 'none' }}
-          >
-            Add section
-          </IconButton>
-          <PanelGroup accordion>{sections}</PanelGroup></div>
+            <h4>{manual.title}</h4>
+            <IconButton
+              appearance="subtle"
+              icon={<Icon icon="plus" />}
+              placement="left"
+              onClick={toggleModal}
+              style={{ display: user && user.role !== 'reader' ? 'block' : 'none' }}
+            >
+              Add section
+            </IconButton>
+            <PanelGroup accordion>{sections}</PanelGroup>
+          </div>
         </div>
       </div>
       <div className="content">
@@ -369,17 +400,40 @@ export default function Manual() {
           <Header />
         </div>
         <div className="search-result" style={{ display: search ? 'block' : 'none' }}>
-          {result.map((item, key) => (
-            <div>
-              <Link href={`/m/${manual.title}/${item.slug}`} id={`${item.slug}`} key={key}>
-                <a>{item.title}</a>
-              </Link>
-              {/* <p>{item.content}</p> */}
-            </div>
-          ))}
+          {result
+            .sort((a, b) => b.contents.length - a.contents.length)
+            .map((item, key) => (
+              <div key={key} className="result">
+                <Row>
+                  <Col xs={24} lg={8}>
+                    <h5>{item.title}</h5>
+                  </Col>
+                  <Col xs={24} lg={16} style={{ borderLeft: '1px solid #ccc' }}>
+                    {getSearch(item.contents, manual.slug)}
+                  </Col>
+                </Row>
+              </div>
+            ))}
         </div>
 
         <div className="inner">
+          <div
+            className=""
+            style={{
+              display:
+                user &&
+                user.role !== 'reader' &&
+                manual &&
+                manual.sections &&
+                manual.sections.length
+                  ? 'block'
+                  : 'none',
+            }}
+          >
+            <IconButton appearance="subtle" icon={<Icon icon="pencil" />} placement="left">
+              Edit manual
+            </IconButton>
+          </div>
           <span className="space-20" />
           <div>
             <h3>{manual ? manual.title : ''}</h3>
@@ -410,10 +464,6 @@ export default function Manual() {
           </IconButton>
         </div>
       </div>
-
-      {/* <Content className="container">
-            <span className="space-50" />
-          </Content> */}
     </div>
   );
 }

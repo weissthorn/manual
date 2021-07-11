@@ -341,17 +341,16 @@ export default function Admin() {
           <br />
           <div>
             <div>
-              <div style={{ float: 'right' }}>
+              <div className="admin-search">
                 <Input
                   size="lg"
                   type="search"
                   placeholder="Search using name, email...."
-                  style={{ width: 400 }}
                   onChange={handleSearch}
                 />
               </div>
 
-              <h4>
+              <h4 className="top-heading">
                 {users.length}
                 {users.length <= 1 ? ' User' : ' Users'}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <Button appearance="default" onClick={toggleModal}>
@@ -403,16 +402,8 @@ export default function Admin() {
               </Column>
             </Table>
 
-            {/* <div className="center">
-              <br />
-              <Button size="sm">&larr; Previous</Button>
-              <Button size="sm" style={{ marginLeft: 10 }}>
-                Next &rarr;
-              </Button>
-            </div> */}
           </div>
         </Content>
-        {/* <Footer></Footer> */}
       </Container>
     </div>
   );

@@ -44,9 +44,8 @@ yarn production
 
 - ~~User management (admin, editor and reader).~~
 - ~~Manual, Section and Content.~~
-- Searchable (section and content).
-- Intelligent content navigation.
-- 100% Responsiveness.
+- ~~Searchable (section and content).~~
+- ~~100% Responsiveness.~~
 - Edit history
 - AWS marketplace
 - Digital Ocean app

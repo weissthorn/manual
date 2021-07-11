@@ -1,17 +1,17 @@
-import { r, Manual, Section, Content } from '../../model';
+import { r, Section } from '../../model';
 import { withAuth } from '../../util';
 import logger from '../../util/log';
 import moment from 'moment';
 
 const searchManual = async (req, res) => {
   await withAuth(req, res);
-  let { query } = req.query;
+  let { manualId, query } = req.query;
 
-  Content.orderBy(r.desc('createdAt'))
+  Section.orderBy(r.desc('createdAt'))
     .filter((page) =>
-      page('title')
-        .match('(?i)' + query)
-        .or(page('content').match('(?i)' + query)),
+      page('manualId')
+        .match(manualId)
+        .and(page('title').match('(?i)' + query)),
     )
     .getJoin()
     .then((data) => {

@@ -38,12 +38,17 @@ export default function Manual() {
   const [content, setContent] = React.useState();
   const [section, setSection] = React.useState();
   const [sectionId, setSectionId] = React.useState();
+  const [menu, setMenu] = React.useState(false);
 
   React.useEffect(() => {
     if (!router.isReady) return;
     getManual();
     loadContent();
   }, [router.query]);
+
+  const toggleMenu = () => {
+    setMenu(!menu);
+  };
 
   const toggleModal = () => {
     setModal(!modal);
@@ -88,9 +93,14 @@ export default function Manual() {
       .sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix())
       .reverse();
     let url = contents.map((item, key) => (
-      <Link href={`/m/${title}/${item.slug}`} id={`${item.slug}`} key={key}>
-        <a className={`${chapter === item.slug ? 'active' : ''}`}>{item.title}</a>
-      </Link>
+      <a
+        href={`/m/${title}/${item.slug}`}
+        id={`${item.slug}`}
+        key={key}
+        className={`${chapter === item.slug ? 'active' : ''}`}
+      >
+        {item.title}
+      </a>
     ));
 
     return url;
@@ -243,7 +253,7 @@ export default function Manual() {
     .sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix())
     .reverse();
   sections = sections.map((item, key) => (
-    <Panel defaultExpanded={item.contents.length ? true: false} header={item.title} key={key}>
+    <Panel defaultExpanded={item.contents.length ? true : false} header={item.title} key={key}>
       {getContent(item.contents, manual.slug)}
       <IconButton
         size="xs"
@@ -266,6 +276,28 @@ export default function Manual() {
         onClick={toggleSearch}
       >
         &nbsp;
+      </div>
+      <div className="custom-modal" style={{ display: menu ? 'block' : 'none' }}>
+        <div className="side-menu mobile">
+          <div className="inner">
+            <h4>
+              {manual.title}{' '}
+              <span className="icon-menu" onClick={toggleMenu}>
+                <Icon icon="close" size={'2x'} />
+              </span>
+            </h4>
+            <IconButton
+              appearance="subtle"
+              icon={<Icon icon="plus" />}
+              placement="left"
+              onClick={toggleModal}
+              style={{ display: user && user.role !== 'reader' ? 'block' : 'none' }}
+            >
+              Add section
+            </IconButton>
+            <PanelGroup accordion>{sections}</PanelGroup>
+          </div>
+        </div>
       </div>
 
       <Modal show={modal} onHide={toggleModal}>
@@ -319,17 +351,22 @@ export default function Manual() {
 
       <div className="side-menu">
         <div className="inner">
-          <h4>{manual.title}</h4>
-          <IconButton
-            appearance="subtle"
-            icon={<Icon icon="plus" />}
-            placement="left"
-            onClick={toggleModal}
-            style={{ display: user && user.role !== 'reader' ? 'block' : 'none' }}
-          >
-            Add section
-          </IconButton>
-          <PanelGroup accordion>{sections}</PanelGroup>
+          <span className="menu mobile" onClick={toggleMenu}>
+            <Icon icon="bars" size={'2x'} />
+          </span>
+          <div className="desktop">
+            <h4>{manual.title}</h4>
+            <IconButton
+              appearance="subtle"
+              icon={<Icon icon="plus" />}
+              placement="left"
+              onClick={toggleModal}
+              style={{ display: user && user.role !== 'reader' ? 'block' : 'none' }}
+            >
+              Add section
+            </IconButton>
+            <PanelGroup accordion>{sections}</PanelGroup>
+          </div>
         </div>
       </div>
       <div className="content">
