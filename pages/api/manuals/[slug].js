@@ -1,5 +1,6 @@
 import { Manual } from '../../../model';
 import { withAuth } from '../../../util';
+import logger from '../../../util/log';
 
 const getManual = async (req, res, next) => {
   await withAuth(req, res, next);

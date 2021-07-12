@@ -9,7 +9,7 @@ const logger = (error) => {
   const date = moment().format('MMM D, YYYY @ hh:mm:ss A');
   const log = `${error}... => ${date} \n`;
 
-  if (process.env.ENVIRONMENT === 'production') {
+  if (process.env.NODE_ENV === 'development') {
     fs.appendFile(path.resolve('log/error.log'), log, (err) => {
       if (err) signale.fatal(err);
     });
