@@ -42,10 +42,12 @@ yarn production
 
 ##### Goals
 
-- ~~User management (admin, editor and reader).~~
-- ~~Manual, Section and Content.~~
-- ~~Searchable (section and content).~~
-- ~~100% Responsiveness.~~
+- ~~User management (admin, editor and reader)~~
+- ~~Manual, Section and Content~~
+- ~~Searchable (section and content)~~
+- ~~Intelligent content navigations~~
+- ~~100% Responsiveness~~
+- Document versioning
 - Edit history
 - AWS marketplace
 - Digital Ocean app

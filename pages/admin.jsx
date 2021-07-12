@@ -8,19 +8,24 @@ import { useRouter } from 'next/router';
 
 export default function Admin() {
   const [loading, setLoading] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
   const [modal, setModal] = React.useState(false);
   const [modal2, setModal2] = React.useState(false);
   const [users, setUsers] = React.useState([]);
   const [user, setUser] = React.useState({});
   const [profile, setProfile] = React.useState({});
   const [notify, setNotify] = React.useState();
+  const router = useRouter();
+  const cookie = parseCookies();
+
+  React.useEffect(() => {
+    let user = cookie;
+    user = user && user._auth ? JSON.parse(user._auth) : null;
+    user = user && user.role === 'reader' ? router.push('/401') : null;
+  }, []);
 
   React.useEffect(() => {
     getUsers();
   }, []);
-
-  const isLoggedIn = () => {};
 
   const toggleModal = () => {
     setModal(!modal);
@@ -119,7 +124,7 @@ export default function Admin() {
           getUsers();
           setUser({});
           toggleModal();
-          Alert.info("User added", 5000);
+          Alert.info('User added', 5000);
         } else {
           setNotify(res.error);
           setLoading(false);
@@ -142,7 +147,7 @@ export default function Admin() {
           getUsers();
           setProfile({});
           toggleModal2();
-            Alert.info("User detail updated", 5000);
+          Alert.info('User detail updated', 5000);
         } else {
           setNotify(res.error);
           setLoading(false);
@@ -151,7 +156,7 @@ export default function Admin() {
   };
 
   const edit = (id) => {
-    let editUser = users.filter((item) => item.id == id);
+    let editUser = users.filter((item) => item.id === id);
     editUser = editUser[0];
 
     setProfile(editUser);
@@ -366,7 +371,6 @@ export default function Admin() {
                 <HeaderCell>Name</HeaderCell>
                 <Cell dataKey="name" />
               </Column>
-
               <Column width={250} fixed>
                 <HeaderCell>Email</HeaderCell>
                 <Cell dataKey="email" />
@@ -375,7 +379,6 @@ export default function Admin() {
                 <HeaderCell>Role</HeaderCell>
                 <Cell dataKey="role" />
               </Column>
-
               <Column width={200} fixed>
                 <HeaderCell>Date</HeaderCell>
                 <Cell>
@@ -386,7 +389,6 @@ export default function Admin() {
               </Column>
               <Column width={120} fixed="right">
                 <HeaderCell>Action</HeaderCell>
-
                 <Cell>
                   {(rowData) => {
                     return (
@@ -401,16 +403,9 @@ export default function Admin() {
                 </Cell>
               </Column>
             </Table>
-
           </div>
         </Content>
       </Container>
     </div>
   );
 }
-
-Admin.getInitialProps = async () => {
-  let cookie = await parseCookies();
-  console.log(cookie);
-  return cookie;
-};

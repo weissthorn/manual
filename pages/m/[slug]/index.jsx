@@ -16,7 +16,6 @@ import {
 import { parseCookies } from 'nookies';
 import Header from '../../../components/ManualHeader';
 import Editor from '../../../components/Editor';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import DOMPurify from 'dompurify';
@@ -24,15 +23,15 @@ import DOMPurify from 'dompurify';
 export default function Manual() {
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
   const [modal, setModal] = React.useState(false);
   const [modal2, setModal2] = React.useState(false);
   const [modal3, setModal3] = React.useState(false);
-  const [modal4, setModal4] = React.useState(false);
   const [result, setResult] = React.useState([]);
   const [search, setSearch] = React.useState();
   const [notify, setNotify] = React.useState();
   const [manual, setManual] = React.useState({});
+  const [manualTitle, setManualTitle] = React.useState();
+  const [manualDescription, setManualDescription] = React.useState();
   const [title, setTitle] = React.useState();
   const [content, setContent] = React.useState();
   const [section, setSection] = React.useState();
@@ -53,6 +52,8 @@ export default function Manual() {
   };
 
   const toggleModal2 = () => {
+    setManualTitle(manual.title);
+    setManualDescription(manual.description);
     setModal2(!modal2);
   };
 
@@ -65,10 +66,6 @@ export default function Manual() {
       setContent();
     }
     setModal3(!modal3);
-  };
-
-  const toggleModal4 = () => {
-    setModal4(!modal4);
   };
 
   const toggleSearch = () => {
@@ -256,6 +253,39 @@ export default function Manual() {
       });
   };
 
+  const updateManual = async (form) => {
+    setLoading(true);
+    const url = `/api/manuals/update`;
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+      body: JSON.stringify(form),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success) {
+          setLoading(false);
+          getManual();
+          toggleModal2();
+          Alert.info('Manual updated successfully', 5000);
+        } else {
+          setNotify(res.error);
+          setLoading(false);
+        }
+      });
+  };
+
+  const saveManual = () => {
+    if (!manualTitle) {
+      Alert.warning('Manual title is empty!');
+    } else if (!manualDescription) {
+      Alert.warning('Manual description is empty!');
+    } else {
+      const form = { id: manual.id, title: manualTitle, description: manualDescription };
+      updateManual(form);
+    }
+  };
+
   const isLoggedIn = () => {
     let user = parseCookies();
     user = user && user._auth ? JSON.parse(user._auth) : {};
@@ -336,6 +366,38 @@ export default function Manual() {
         </Modal.Footer>
       </Modal>
 
+      <Modal show={modal2} onHide={toggleModal2}>
+        <Modal.Header>
+          <Modal.Title>Edit Manual</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p style={{ color: '#cb0000' }}>{notify}</p>
+          <br />
+          <Input
+            type="text"
+            placeholder="Manual Title"
+            onChange={(value) => setManualTitle(value)}
+            defaultValue={manual.title}
+          />
+          <br />
+          <Input
+            componentClass="textarea"
+            rows={3}
+            placeholder="Manual description"
+            onChange={(value) => setManualDescription(value)}
+            defaultValue={manual.description}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={saveManual} appearance="primary" loading={loading}>
+            Save
+          </Button>
+          <Button onClick={toggleModal2} appearance="subtle">
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <Modal full overflow={true} show={modal3} onHide={toggleModal3}>
         <Modal.Header>
           <Modal.Title>Add content</Modal.Title>
@@ -371,17 +433,30 @@ export default function Manual() {
           <span className="menu mobile" onClick={toggleMenu}>
             <Icon icon="bars" size={'2x'} />
           </span>
-          <div className="desktop">
+          <div className="desktop inner-menu">
             <h4>{manual.title}</h4>
-            <IconButton
-              appearance="subtle"
-              icon={<Icon icon="plus" />}
-              placement="left"
-              onClick={toggleModal}
-              style={{ display: user && user.role !== 'reader' ? 'block' : 'none' }}
+            <div
+              style={{
+                display:
+                  user &&
+                  user.role !== 'reader' &&
+                  manual &&
+                  manual.sections &&
+                  manual.sections.length
+                    ? 'block'
+                    : 'none',
+              }}
             >
-              Add section
-            </IconButton>
+              <IconButton
+                appearance="subtle"
+                icon={<Icon icon="plus" />}
+                placement="left"
+                onClick={toggleModal}
+              >
+                Add section
+              </IconButton>
+            </div>
+
             <PanelGroup accordion>{sections}</PanelGroup>
           </div>
         </div>
@@ -414,6 +489,7 @@ export default function Manual() {
                 </Row>
               </div>
             ))}
+          {!result.length ? 'No result found' : null}
         </div>
 
         <div className="inner">
@@ -430,7 +506,12 @@ export default function Manual() {
                   : 'none',
             }}
           >
-            <IconButton appearance="subtle" icon={<Icon icon="pencil" />} placement="left">
+            <IconButton
+              appearance="subtle"
+              icon={<Icon icon="pencil" />}
+              placement="left"
+              onClick={toggleModal2}
+            >
               Edit manual
             </IconButton>
           </div>
@@ -441,26 +522,32 @@ export default function Manual() {
           </div>
         </div>
 
-        <div
-          className="footer"
-          style={{
-            display:
-              user && user.role !== 'reader' && manual && manual.sections && manual.sections.length
-                ? 'block'
-                : 'none',
-          }}
-        >
+        <div className="footer">
           <Divider />
-          <IconButton appearance="subtle" icon={<Icon icon="chevron-left" />} placement="left">
-            Previous
-          </IconButton>
+
           <IconButton
             appearance="subtle"
             icon={<Icon icon="chevron-right" />}
             placement="right"
-            style={{ float: 'right' }}
+            style={{
+              float: 'right',
+              display:
+                manual &&
+                manual.sections &&
+                manual.sections.length &&
+                manual.sections[0].contents[0]
+                  ? 'inline-block'
+                  : 'none',
+            }}
+            href={
+              manual && manual.sections && manual.sections.length && manual.sections[0].contents[0]
+                ? `/m/${manual.slug}/${manual.sections[0].contents[0].slug}`
+                : ''
+            }
           >
-            Next
+            {manual && manual.sections && manual.sections.length && manual.sections[0].contents[0]
+              ? manual.sections[0].contents[0].title
+              : ''}
           </IconButton>
         </div>
       </div>

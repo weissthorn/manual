@@ -16,25 +16,24 @@ import {
 import { parseCookies } from 'nookies';
 import Header from '../../../components/ManualHeader';
 import Editor from '../../../components/Editor';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import DOMPurify from 'dompurify';
+import NavigationButton from '../../../components/NavigationButton';
 
-export default function Manual() {
+export default function Chapter() {
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
   const [modal, setModal] = React.useState(false);
   const [modal2, setModal2] = React.useState(false);
   const [modal3, setModal3] = React.useState(false);
   const [modal4, setModal4] = React.useState(false);
-  const [searchValue, setSearchValue] = React.useState();
+  const [result, setResult] = React.useState([]);
   const [search, setSearch] = React.useState();
   const [notify, setNotify] = React.useState();
   const [manual, setManual] = React.useState({});
   const [title, setTitle] = React.useState();
-  const [contents, setContents] = React.useState();
+  const [contents, setContents] = React.useState({});
   const [content, setContent] = React.useState();
   const [section, setSection] = React.useState();
   const [sectionId, setSectionId] = React.useState();
@@ -80,10 +79,29 @@ export default function Manual() {
   const searchContent = (val) => {
     setSearch(true);
     if (val.length) {
-      //  content.searchManual(val)
+      searchManual(val);
     } else {
       setSearch(false);
     }
+  };
+
+  const searchManual = async (q) => {
+    setLoading(true);
+    const url = `/api/search?query=${q}&manualId=${manual.id}`;
+    await fetch(url, {
+      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success) {
+          setLoading(false);
+          setResult(res.data);
+          setNotify('');
+        } else {
+          setNotify(res.error);
+          setLoading(false);
+        }
+      });
   };
 
   const getContent = (contents, title) => {
@@ -101,6 +119,28 @@ export default function Manual() {
       >
         {item.title}
       </a>
+    ));
+
+    return url;
+  };
+
+  const getSearch = (contents, title) => {
+    const { chapter } = router.query;
+    contents = contents && contents.length ? contents : [];
+    contents = contents
+      .sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix())
+      .reverse();
+    let url = contents.map((item, key) => (
+      <div key={key}>
+        <a
+          href={`/m/${title}/${item.slug}`}
+          id={`${item.slug}`}
+          className={`${chapter === item.slug ? 'active' : ''}`}
+          style={{ paddingLeft: 5 }}
+        >
+          {item.title}
+        </a>
+      </div>
     ));
 
     return url;
@@ -354,14 +394,23 @@ export default function Manual() {
           <span className="menu mobile" onClick={toggleMenu}>
             <Icon icon="bars" size={'2x'} />
           </span>
-          <div className="desktop">
+          <div className="desktop inner-menu">
             <h4>{manual.title}</h4>
             <IconButton
               appearance="subtle"
               icon={<Icon icon="plus" />}
               placement="left"
               onClick={toggleModal}
-              style={{ display: user && user.role !== 'reader' ? 'block' : 'none' }}
+              style={{
+                display:
+                  user &&
+                  user.role !== 'reader' &&
+                  manual &&
+                  manual.sections &&
+                  manual.sections.length
+                    ? 'block'
+                    : 'none',
+              }}
             >
               Add section
             </IconButton>
@@ -376,25 +425,28 @@ export default function Manual() {
               <InputGroup.Addon>
                 <Icon icon="search" />
               </InputGroup.Addon>
-              <Input
-                size={'lg'}
-                placeholder={`Search manual....`}
-                onChange={search}
-                value={searchValue}
-              />
+              <Input size={'lg'} placeholder={`Search manual....`} onChange={searchContent} />
             </InputGroup>
           </div>
 
           <Header />
         </div>
         <div className="search-result" style={{ display: search ? 'block' : 'none' }}>
-          <p>
-            data Listening for intracluster connections on port 29015 Listening for client driver
-            connections on port 28015 Listening for administrative HTTP connections on port 8080
-            Listening on cluster addresses: 127.0.0.1, 192.168.0.128, ::1, fe80::1%1,
-            fe80::18bb:fe9c:ca4d:6e77%5, fe80::195c:b6c8:6b75:91bd%16, fe80::387c:abf2:2f19:dd78%13,
-            fe80::497b:ab5b:9034:300f%15,{' '}
-          </p>
+          {result
+            .sort((a, b) => b.contents.length - a.contents.length)
+            .map((item, key) => (
+              <div key={key} className="result">
+                <Row>
+                  <Col xs={24} lg={8}>
+                    <h5>{item.title}</h5>
+                  </Col>
+                  <Col xs={24} lg={16} style={{ borderLeft: '1px solid #ccc' }}>
+                    {getSearch(item.contents, manual.slug)}
+                  </Col>
+                </Row>
+              </div>
+            ))}
+          {!result.length ? 'No result found' : null}
         </div>
 
         <div className="inner">
@@ -428,34 +480,17 @@ export default function Manual() {
             />
           </div>
         </div>
+        {manual && manual.sections && contents.sectionId ? (
+          <div className="footer">
+            <Divider />
 
-        <div
-          className="footer"
-          style={{
-            display:
-              user && user.role !== 'reader' && manual && manual.sections && manual.sections.length
-                ? 'block'
-                : 'none',
-          }}
-        >
-          <Divider />
-          <IconButton appearance="subtle" icon={<Icon icon="chevron-left" />} placement="left">
-            Previous
-          </IconButton>
-          <IconButton
-            appearance="subtle"
-            icon={<Icon icon="chevron-right" />}
-            placement="right"
-            style={{ float: 'right' }}
-          >
-            Next
-          </IconButton>
-        </div>
+            <NavigationButton manual={manual} content={contents} forward={false} />
+            <NavigationButton manual={manual} content={contents} forward={true} />
+          </div>
+        ) : (
+          ''
+        )}
       </div>
-
-      {/* <Content className="container">
-            <span className="space-50" />
-          </Content> */}
     </div>
   );
 }

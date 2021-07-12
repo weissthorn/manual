@@ -28,7 +28,6 @@ export default function Login() {
   };
 
   const authenticate = async (data) => {
-    console.log(process.env);
     setLoading(true);
     const url = `/api/users/login`;
 
@@ -41,7 +40,7 @@ export default function Login() {
       .then((res) => {
         if (res.success) {
           setCookie(null, '_auth', JSON.stringify(res.data), {
-            maxAge: 2 * 60 * 60, // 2 hours
+            maxAge: 6 * 60 * 60, // 2 hours
             path: '/',
           });
           setLoading(false);

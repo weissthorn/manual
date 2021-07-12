@@ -4,12 +4,11 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { parseCookies, destroyCookie } from 'nookies';
 
-
 export default function ManualHeader({ title, description }) {
   const router = useRouter();
+  const cookie = parseCookies();
 
   React.useEffect(() => {
-     const cookie = parseCookies();
     !cookie._auth ? router.push('/login') : null;
   }, []);
 
@@ -19,7 +18,7 @@ export default function ManualHeader({ title, description }) {
   };
 
   const isLoggedIn = () => {
-    let user = parseCookies();
+    let user = cookie;
     user = user && user._auth ? JSON.parse(user._auth) : {};
     return user;
   };
