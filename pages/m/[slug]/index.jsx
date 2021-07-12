@@ -156,6 +156,7 @@ export default function Manual() {
           setLoading(false);
           getManual();
           setNotify('');
+          Alert.info('Section created!');
           toggleModal();
         } else {
           setNotify(res.error);
@@ -195,6 +196,7 @@ export default function Manual() {
           setNotify('');
           setTitle();
           setContent();
+          Alert.info('Content created!');
           setModal3(false);
         } else {
           setNotify(res.error);

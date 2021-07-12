@@ -37,6 +37,7 @@ export default function Editor({ value, onChange }) {
               'link',
               'image',
               'video',
+              'removeFormat',
             ],
           ],
         }}

@@ -54,6 +54,9 @@ export default function Chapter() {
   };
 
   const toggleModal2 = () => {
+    let editSection = manual.sections.filter((item) => item.id === contents.sectionId);
+    setSection(editSection[0].title);
+    setSectionId(contents.sectionId);
     setModal2(!modal2);
   };
 
@@ -183,7 +186,33 @@ export default function Chapter() {
           setLoading(false);
           getManual();
           setNotify('');
+          setSection('');
+          Alert.info('Section created!');
           toggleModal();
+        } else {
+          setNotify(res.error);
+          setLoading(false);
+        }
+      });
+  };
+
+  const updateSection = async (form) => {
+    setLoading(true);
+    const url = `/api/sections/update`;
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+      body: JSON.stringify(form),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success) {
+          setLoading(false);
+          getManual();
+          setNotify('');
+          setSection('');
+          Alert.info('Section updated!');
+          toggleModal2();
         } else {
           setNotify(res.error);
           setLoading(false);
@@ -206,6 +235,21 @@ export default function Chapter() {
     }
   };
 
+  const editSection = () => {
+    if (!section) {
+      setNotify('Section title is empty!');
+    } else {
+      setNotify('');
+      const data = {
+        title: section,
+        id: sectionId,
+        user: user.id,
+      };
+
+      updateSection(data);
+    }
+  };
+
   const saveContent = async (form) => {
     setLoading(true);
     const url = `/api/content/create`;
@@ -222,6 +266,7 @@ export default function Chapter() {
           setNotify('');
           setTitle();
           setContent();
+          Alert.info('Content created!');
           setModal3(false);
         } else {
           setNotify(res.error);
@@ -296,6 +341,7 @@ export default function Chapter() {
     <Panel defaultExpanded={item.contents.length ? true : false} header={item.title} key={key}>
       {getContent(item.contents, manual.slug)}
       <IconButton
+        id={item.id}
         size="xs"
         appearance="subtle"
         icon={<Icon icon="plus" />}
@@ -354,6 +400,29 @@ export default function Chapter() {
             Save
           </Button>
           <Button onClick={toggleModal} appearance="subtle">
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={modal2} onHide={toggleModal2}>
+        <Modal.Header>
+          <Modal.Title>Edit section</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p style={{ color: '#cb0000' }}>{notify}</p>
+          <br />
+          <Input
+            type="text"
+            placeholder="Section Title"
+            value={section}
+            onChange={(value) => setSection(value)}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={editSection} appearance="primary" loading={loading}>
+            Save
+          </Button>
+          <Button onClick={toggleModal2} appearance="subtle">
             Cancel
           </Button>
         </Modal.Footer>
@@ -463,7 +532,12 @@ export default function Chapter() {
                   : 'none',
             }}
           >
-            <IconButton appearance="subtle" icon={<Icon icon="pencil" />} placement="left">
+            <IconButton
+              onClick={toggleModal2}
+              appearance="subtle"
+              icon={<Icon icon="pencil" />}
+              placement="left"
+            >
               Edit section
             </IconButton>
             <IconButton appearance="subtle" icon={<Icon icon="pencil" />} placement="left">
