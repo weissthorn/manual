@@ -72,6 +72,8 @@ export default function Chapter() {
   };
 
   const toggleModal4 = () => {
+    setTitle(contents.title);
+    setContent(contents.content);
     setModal4(!modal4);
   };
 
@@ -264,10 +266,35 @@ export default function Chapter() {
           setLoading(false);
           router.push(`/m/${manual.slug}/${res.data.slug}`);
           setNotify('');
-          setTitle();
-          setContent();
+          setTitle('');
+          setContent('');
           Alert.info('Content created!');
           setModal3(false);
+        } else {
+          setNotify(res.error);
+          setLoading(false);
+        }
+      });
+  };
+
+  const updateContent = async (form) => {
+    setLoading(true);
+    const url = `/api/content/update`;
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+      body: JSON.stringify(form),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success) {
+          setLoading(false);
+          router.push(`/m/${manual.slug}/${res.data.slug}`);
+          setNotify('');
+          setTitle('');
+          setContent('');
+          Alert.info('Content updated!');
+          setModal4(false);
         } else {
           setNotify(res.error);
           setLoading(false);
@@ -290,6 +317,24 @@ export default function Chapter() {
       };
 
       saveContent(data);
+    }
+  };
+
+  const editContent = () => {
+    if (!title) {
+      setNotify('Content title is empty!');
+    } else if (!content) {
+      setNotify('Content is empty!');
+    } else {
+      setNotify('');
+      const data = {
+        title,
+        content,
+        id: contents.id,
+        user: user.id,
+      };
+
+      updateContent(data);
     }
   };
 
@@ -458,6 +503,37 @@ export default function Chapter() {
         </Modal.Footer>
       </Modal>
 
+      <Modal full overflow={true} show={modal4} onHide={toggleModal4}>
+        <Modal.Header>
+          <Modal.Title>Update content</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col xs={9}>
+              <Input type="text" placeholder="Content Title" value={title} onChange={handleTitle} />{' '}
+              <br />
+              <Editor onChange={handleContent} value={content} />
+            </Col>
+            <Col xsOffset={1} xs={12}>
+              <h4>{title}</h4>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: content,
+                }}
+              />
+            </Col>
+          </Row>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={editContent} loading={loading} appearance="primary">
+            Save
+          </Button>
+          <Button onClick={toggleModal4} appearance="subtle">
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <div className="side-menu">
         <div className="inner">
           <span className="menu mobile" onClick={toggleMenu}>
@@ -540,7 +616,12 @@ export default function Chapter() {
             >
               Edit section
             </IconButton>
-            <IconButton appearance="subtle" icon={<Icon icon="pencil" />} placement="left">
+            <IconButton
+              onClick={toggleModal4}
+              appearance="subtle"
+              icon={<Icon icon="pencil" />}
+              placement="left"
+            >
               Edit content
             </IconButton>
           </div>

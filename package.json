@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "author": "Olalekan Animashaun",
+  "description": "Product/service manual CMS",
   "license": "MIT",
   "scripts": {
     "dev": "next dev -p 2301",
