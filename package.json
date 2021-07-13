@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "next dev -p 2301",
     "build": "next build",
-    "start": "npm run build && pm2 start ./src/app.js -n 'manual'",
+    "start": "yarn build && next start",
     "staging": "npm run build && pm2 reload ./src/app.js -n 'manual' --update-env",
     "production": "npm run build && pm2 reload ./src/app.js -n 'manual' --update-env",
     "start_db": "rethinkdb --bind all",
