@@ -7,6 +7,16 @@ Documentation CMS for product / service
 
 ##### Demo
 
+[Demo link](https://manual-five.vercel.app/)
+
+<p>Admin:</p>
+<p>email: admin@test.com</p>
+<p>password: test123</p>
+
+<p>Reader:</p>
+<p>email: reader@test.com</p>
+<p>password: test123</p>
+
 ![User](public/images/image0.png 'Users')
 ![Manual](public/images/image1.png 'Manual')
 ![Manual 2](public/images/image2.png 'Manual 2')
