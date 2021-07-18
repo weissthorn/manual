@@ -166,7 +166,7 @@ export default function Manuals() {
           </h3>
           <br />
           <br />
-          <center style={{ display: !loading ? 'none' : 'block' }}>
+          <center style={{ display: loading ? 'block' : 'none' }}>
             <Loader size="md" />
           </center>
           <Row style={{ display: manual.length ? 'block' : 'none' }}>{manual}</Row>

@@ -1,8 +1,13 @@
 ## Manual
 
-Product / service manual CMS
+Documentation CMS for product / service
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/cf9240677a0149859cfaaeedf0f8f996)](https://www.codacy.com/gh/weissthorn/manual/dashboard?utm_source=github.com&utm_medium=referral&utm_content=weissthorn/manual&utm_campaign=Badge_Grade)
+
+![User](public/images/image0.png 'Users')
+![Manual](public/images/image1.png 'Manual')
+![Manual 2](public/images/image2.png 'Manual 2')
+![Search](public/images/image3.png 'Search')
 
 ##### Prerequisite
 
@@ -43,6 +48,13 @@ yarn staging
 ```sh
 yarn production
 ```
+
+##### Usage
+
+1. Go to [http://your-domain.com/config](http://your-domain.com/config).
+2. Go to [http://your-domain.com/setup](http://your-domain.com/setup) to setup default admin account.
+3. Go to [http://your-domain.com/admin](http://your-domain.com/admin) to setup account for admin, editor or reader.
+4. Go to [http://your-domain.com/manuals](http://your-domain.com/manuals) to create documentation for product or service.
 
 ##### Goals
 
