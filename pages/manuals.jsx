@@ -45,7 +45,7 @@ export default function Manuals() {
           setLoading(false);
           getManuals();
           toggleModal();
-            Alert.info("Manual created successfully", 5000)
+          Alert.info('Manual created successfully', 5000);
         } else {
           setNotify(res.error);
           setLoading(false);
@@ -80,6 +80,7 @@ export default function Manuals() {
           setLoading(false);
         } else {
           setNotify(res.error);
+          setLoading(false);
         }
       });
   };
@@ -165,7 +166,7 @@ export default function Manuals() {
           </h3>
           <br />
           <br />
-          <center style={{ display: manual.length ? 'none' : 'block' }}>
+          <center style={{ display: !loading ? 'none' : 'block' }}>
             <Loader size="md" />
           </center>
           <Row style={{ display: manual.length ? 'block' : 'none' }}>{manual}</Row>

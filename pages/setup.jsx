@@ -85,7 +85,7 @@ export default function Login() {
       setNotify('Password is too short!');
     } else {
       setNotify('');
-      const data = { name, email, password };
+      const data = { name, email, password, role: 'admin' };
       authenticate(data);
     }
   };
