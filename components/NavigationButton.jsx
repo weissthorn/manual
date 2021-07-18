@@ -15,17 +15,20 @@ const prevTitle = (manual, content) => {
   if (currentContents.length > currentContentKey && currentContentKey !== 0) {
     prev = currentContentKey - 1;
     prev = currentContents[prev];
-    prev = prev.title;
-    prev = prev ? prev : false;
+    prev = prev ? prev.title : false;
   } //Get previous section and use
   else if (sections.length > currentSectionKey && currentSectionKey !== 0) {
     prev = currentSectionKey - 1;
     prev = sections[prev];
-    let prevContents = prev.contents,
-      length = prev.contents.length - 1;
-    prev = prevContents[length];
-    prev = prev.title;
-    prev = prev ? prev : false;
+    if (prev) {
+      let prevContents = prev.contents,
+        length = prev.contents.length - 1;
+      prev = prevContents[length];
+      prev = prev.title;
+      prev = prev ? prev : false;
+    } else {
+      prev = false;
+    }
   }
 
   return prev;
@@ -45,17 +48,25 @@ const prevLink = (manual, content) => {
   if (currentContents.length > currentContentKey && currentContentKey !== 0) {
     prev = currentContentKey - 1;
     prev = currentContents[prev];
-    prev = `/m/${manual.slug}/${prev.slug}`;
-    prev = prev ? prev : false;
+    if (prev) {
+      prev = `/m/${manual.slug}/${prev.slug}`;
+      prev = prev ? prev : false;
+    } else {
+      prev = false;
+    }
   } //Get previous section and use
   else if (sections.length > currentSectionKey && currentSectionKey !== 0) {
     prev = currentSectionKey - 1;
     prev = sections[prev];
-    let prevContents = prev.contents,
-      length = prev.contents.length - 1;
-    prev = prevContents[length];
-    prev = `/m/${manual.slug}/${prev.slug}`;
-    prev = prev ? prev : false;
+    if (prev) {
+      let prevContents = prev.contents,
+        length = prev.contents.length - 1;
+      prev = prevContents[length];
+      prev = `/m/${manual.slug}/${prev.slug}`;
+      prev = prev ? prev : false;
+    } else {
+      prev = false;
+    }
   }
 
   return prev;
@@ -81,9 +92,13 @@ const nextTitle = (manual, content) => {
   else if (sections.length > currentSectionKey) {
     next = currentSectionKey + 1;
     next = sections[next];
-    let nextContents = next.contents;
-    next = nextContents[0];
-    next = next ? next.title : false;
+    if (next) {
+      let nextContents = next.contents;
+      next = nextContents[0];
+      next = next ? next.title : false;
+    } else {
+      next = false;
+    }
   }
 
   return next;
@@ -109,9 +124,13 @@ const nextLink = (manual, content) => {
   else if (sections.length > currentSectionKey) {
     next = currentSectionKey + 1;
     next = sections[next];
-    let nextContents = next.contents;
-    next = nextContents[0];
-    next = next && next.id ? `/m/${manual.slug}/${next.slug}` : false;
+    if (next) {
+      let nextContents = next.contents;
+      next = nextContents[0];
+      next = next && next.id ? `/m/${manual.slug}/${next.slug}` : false;
+    } else {
+      next = false;
+    }
   }
 
   return next;

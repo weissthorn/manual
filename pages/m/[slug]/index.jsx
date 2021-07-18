@@ -439,14 +439,7 @@ export default function Manual() {
             <h4>{manual.title}</h4>
             <div
               style={{
-                display:
-                  user &&
-                  user.role !== 'reader' &&
-                  manual &&
-                  manual.sections &&
-                  manual.sections.length
-                    ? 'block'
-                    : 'none',
+                display: user && user.role !== 'reader' && manual ? 'block' : 'none',
               }}
             >
               <IconButton
@@ -498,14 +491,7 @@ export default function Manual() {
           <div
             className=""
             style={{
-              display:
-                user &&
-                user.role !== 'reader' &&
-                manual &&
-                manual.sections &&
-                manual.sections.length
-                  ? 'block'
-                  : 'none',
+              display: user && user.role !== 'reader' && manual ? 'block' : 'none',
             }}
           >
             <IconButton

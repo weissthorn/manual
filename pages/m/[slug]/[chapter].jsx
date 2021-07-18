@@ -598,14 +598,7 @@ export default function Chapter() {
           <div
             className=""
             style={{
-              display:
-                user &&
-                user.role !== 'reader' &&
-                manual &&
-                manual.sections &&
-                manual.sections.length
-                  ? 'block'
-                  : 'none',
+              display: user && user.role !== 'reader' && manual ? 'block' : 'none',
             }}
           >
             <IconButton

@@ -110,7 +110,7 @@ export default function Manuals() {
           <h3>{item.title}</h3>
           <br />
           <br />
-          <p>{item.description}</p>
+          <p style={{ height: 50 }}>{item.description}</p>
           <br />
           <Button href={`/m/${item.slug}`} block>
             View &rarr;

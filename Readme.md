@@ -5,6 +5,8 @@ Documentation CMS for product / service
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/cf9240677a0149859cfaaeedf0f8f996)](https://www.codacy.com/gh/weissthorn/manual/dashboard?utm_source=github.com&utm_medium=referral&utm_content=weissthorn/manual&utm_campaign=Badge_Grade) <a href= "https://github.com/prettier/prettier"><img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg"></a>
 
+##### Demo
+
 ![User](public/images/image0.png 'Users')
 ![Manual](public/images/image1.png 'Manual')
 ![Manual 2](public/images/image2.png 'Manual 2')
