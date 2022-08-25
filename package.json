@@ -9,8 +9,8 @@
     "dev": "next dev -p 2301",
     "build": "next build",
     "start": "yarn build && next start",
-    "staging": "npm run build && pm2 reload ./src/app.js -n 'manual' --update-env",
-    "production": "npm run build && pm2 reload ./src/app.js -n 'manual' --update-env",
+    "staging": "yarn build && pm2 reload ./src/app.js -n 'manual' --update-env",
+    "production": "yarn run build && pm2 reload ./src/app.js -n 'manual' --update-env",
     "start_db": "rethinkdb --bind all",
     "fix_style": "stylelint '**/*.scss' --syntax scss --fix"
   },
