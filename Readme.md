@@ -71,17 +71,16 @@ yarn production
 
 ##### Goals
 
-- ~~User management (admin, editor and reader)~~
-- ~~Manual, Section and Content~~
-- ~~Searchable (section and content)~~
-- ~~Intelligent content navigations~~
-- ~~100% Responsiveness~~
-- Document versioning
-- Edit history
-- AWS marketplace
-- Digital Ocean app
-- Docker image
-- Vagrant box
+- &#x2611; User management (admin, editor and reader)
+- &#x2611; Manual, Section and Content
+- &#x2611; Searchable (section and content)
+- &#x2611; Intelligent content navigations
+- &#x2611; 100% Responsiveness
+- &#x2610; Document versioning
+- &#x2610; Edit history
+- &#x2610; Docker image
+- &#x2610; AWS marketplace
+- &#x2610; Digital Ocean app
 
 ##### Maintainer
 
