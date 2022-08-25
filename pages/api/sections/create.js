@@ -1,6 +1,6 @@
 import slugify from 'slugify';
 import { Section } from '../../../model';
-import { withAuth } from '../../../util';
+import { withAuth, slug } from '../../../util';
 import logger from '../../../util/log';
 
 const newSection = async (req, res) => {
@@ -13,8 +13,10 @@ const newSection = async (req, res) => {
     strict: false, // strip special characters except replacement, defaults to `false`
     locale: 'vi', // language code of the locale to use
   });
-  let manual = new Section(req.body);
-  manual
+  req.body.slug = req.body.slug + '-' + slug();
+
+  let section = new Section(req.body);
+  section
     .save()
     .then((data) => {
       res.send({ success: true, data });

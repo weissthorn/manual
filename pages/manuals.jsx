@@ -13,11 +13,11 @@ import {
   Alert,
   Loader,
 } from 'rsuite';
-import { parseCookies } from 'nookies';
-
 import Header from '../components/Header';
+import useToken from '../components/Token';
 
 export default function Manuals() {
+  const user = useToken();
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [modal, setModal] = React.useState(false);
@@ -25,7 +25,7 @@ export default function Manuals() {
 
   React.useEffect(() => {
     getManuals();
-  }, []);
+  }, [user]);
 
   const toggleModal = () => {
     setModal(!modal);
@@ -54,7 +54,6 @@ export default function Manuals() {
   };
 
   const save = (e) => {
-    let user = isLoggedIn();
     let form = { user: user.id },
       fields = [];
     fields = document.querySelectorAll('.inputs');
@@ -84,14 +83,6 @@ export default function Manuals() {
         }
       });
   };
-
-  const isLoggedIn = () => {
-    let user = parseCookies();
-    user = user && user._auth ? JSON.parse(user._auth) : {};
-    return user;
-  };
-
-  const user = isLoggedIn();
 
   const manual = manuals.map((item, key) => (
     <Col xs={24} sm={24} lg={8} key={key}>
@@ -130,7 +121,6 @@ export default function Manuals() {
             <FormGroup>
               <FormControl
                 rows={5}
-                name="textarea"
                 componentClass="textarea"
                 placeholder="Manual Description"
                 className="inputs"

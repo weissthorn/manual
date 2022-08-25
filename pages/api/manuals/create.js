@@ -1,6 +1,6 @@
 import slugify from 'slugify';
 import { Manual } from '../../../model';
-import { withAuth } from '../../../util';
+import { slug, withAuth } from '../../../util';
 import logger from '../../../util/log';
 
 const newManual = async (req, res) => {
@@ -13,6 +13,9 @@ const newManual = async (req, res) => {
     strict: false, // strip special characters except replacement, defaults to `false`
     locale: 'vi', // language code of the locale to use
   });
+
+  req.body.slug = req.body.slug + '-' + slug();
+
   let manual = new Manual(req.body);
   manual
     .save()

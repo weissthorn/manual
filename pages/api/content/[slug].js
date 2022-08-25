@@ -8,7 +8,7 @@ const getContent = async (req, res, next) => {
   Content.filter({ slug })
     .getJoin()
     .then((data) => {
-      if (data.length === 1) {
+      if (data.length) {
         res.send({ success: true, data: data[0] });
       } else {
         res.send({ success: false, error: 'Unable to get content.' });

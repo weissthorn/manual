@@ -1,6 +1,6 @@
 import slugify from 'slugify';
 import { Content } from '../../../model';
-import { withAuth } from '../../../util';
+import { withAuth, slug } from '../../../util';
 import logger from '../../../util/log';
 
 const newContent = async (req, res) => {
@@ -13,13 +13,23 @@ const newContent = async (req, res) => {
     strict: false, // strip special characters except replacement, defaults to `false`
     locale: 'vi', // language code of the locale to use
   });
-  let manual = new Content(req.body);
-  manual
+  req.body.slug = req.body.slug + '-' + slug();
+
+  let content = new Content(req.body);
+  content
     .save()
     .then((data) => {
       res.send({ success: true, data });
     })
     .catch((err) => logger(err));
+};
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '50mb',
+    },
+  },
 };
 
 export default newContent;

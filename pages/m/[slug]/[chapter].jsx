@@ -13,15 +13,16 @@ import {
   InputGroup,
   Alert,
 } from 'rsuite';
-import { parseCookies } from 'nookies';
 import Header from '../../../components/ManualHeader';
 import Editor from '../../../components/Editor';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import DOMPurify from 'dompurify';
 import NavigationButton from '../../../components/NavigationButton';
+import useToken from '../../../components/Token';
 
 export default function Chapter() {
+  const user = useToken();
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
   const [modal, setModal] = React.useState(false);
@@ -40,10 +41,9 @@ export default function Chapter() {
   const [menu, setMenu] = React.useState(false);
 
   React.useEffect(() => {
-    if (!router.isReady) return;
-    getManual();
-    loadContent();
-  }, [router.query]);
+    router.isReady ? getManual().then((id) => {}) : null;
+    router.isReady ? loadContent() : null;
+  }, [router, user]);
 
   const toggleMenu = () => {
     setMenu(!menu);
@@ -156,6 +156,7 @@ export default function Chapter() {
 
     setLoading(true);
     const url = `/api/content/${chapter}`;
+
     await fetch(url, {
       headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
     })
@@ -166,8 +167,9 @@ export default function Chapter() {
           setContents(res.data);
           setNotify('');
         } else {
+          console.log(res);
           if (res.error === 'Unable to get content.') {
-            router.push('/404');
+            // router.push('/404');
           }
           setLoading(false);
         }
@@ -352,7 +354,7 @@ export default function Chapter() {
 
     setLoading(true);
     const url = `/api/manuals/${slug}`;
-    await fetch(url, {
+    return await fetch(url, {
       headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
     })
       .then((res) => res.json())
@@ -361,22 +363,16 @@ export default function Chapter() {
           setLoading(false);
           setManual(res.data);
           setNotify('');
+          return res.data.id;
         } else {
           if (res.error === 'Unable to get manual.') {
             router.push('/404');
           }
           setLoading(false);
+          return false;
         }
       });
   };
-
-  const isLoggedIn = () => {
-    let user = parseCookies();
-    user = user && user._auth ? JSON.parse(user._auth) : {};
-    return user;
-  };
-
-  const user = isLoggedIn();
 
   let sections = manual && manual.sections ? manual.sections : [];
   sections = sections
@@ -574,7 +570,7 @@ export default function Chapter() {
             </InputGroup>
           </div>
 
-          <Header />
+          <Header title={contents.title} description={contents.title} />
         </div>
         <div className="search-result" style={{ display: search ? 'block' : 'none' }}>
           {result

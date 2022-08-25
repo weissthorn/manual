@@ -2,7 +2,7 @@
 require('dotenv').config();
 
 const slug = () => {
-  return Math.random().toString(36).substring(2, 32) + Math.random().toString(36).substring(2, 32);
+  return Math.random().toString(32).substring(2, 7) + Math.random().toString(32).substring(2, 7);
 };
 
 const code = () => {

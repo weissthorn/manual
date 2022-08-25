@@ -19,9 +19,11 @@ import Editor from '../../../components/Editor';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import DOMPurify from 'dompurify';
+import useToken from '../../../components/Token';
 
 export default function Manual() {
   const router = useRouter();
+  const user = useToken();
   const [loading, setLoading] = React.useState(false);
   const [modal, setModal] = React.useState(false);
   const [modal2, setModal2] = React.useState(false);
@@ -41,7 +43,7 @@ export default function Manual() {
   React.useEffect(() => {
     if (!router.isReady) return;
     getManual();
-  }, [router.isReady]);
+  }, [router, user]);
 
   const toggleMenu = () => {
     setMenu(!menu);
@@ -288,14 +290,6 @@ export default function Manual() {
     }
   };
 
-  const isLoggedIn = () => {
-    let user = parseCookies();
-    user = user && user._auth ? JSON.parse(user._auth) : {};
-    return user;
-  };
-
-  const user = isLoggedIn();
-
   let sections = manual && manual.sections ? manual.sections : [];
   sections = sections
     .sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix())
@@ -467,7 +461,7 @@ export default function Manual() {
             </InputGroup>
           </div>
 
-          <Header />
+          <Header title={manual.title} description={manual.description} />
         </div>
         <div className="search-result" style={{ display: search ? 'block' : 'none' }}>
           {result

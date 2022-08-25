@@ -72,7 +72,7 @@ export default function Login() {
         <FlexboxGrid justify="center">
           <FlexboxGrid.Item colspan={12}>
             <div className="login center">
-              <h3>Manual</h3>
+              <h3>{process.env.SITE_NAME}</h3>
               <p>Login into your account</p>
               <br />
               <Panel bordered style={{ padding: 20 }}>
