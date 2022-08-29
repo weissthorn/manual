@@ -13,7 +13,7 @@ export default function Config() {
   const isConfigured = async () => {
     const url = `api/users/config`;
     await fetch(url, {
-      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+      headers: { 'content-type': 'application/json', apikey: process.env.NEXT_PUBLIC_API_KEY },
     })
       .then((res) => res.json())
       .then((res) => {

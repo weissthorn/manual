@@ -87,7 +87,7 @@ export default function Manual() {
     setLoading(true);
     const url = `/api/search?query=${q}&manualId=${manual.id}`;
     await fetch(url, {
-      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+      headers: { 'content-type': 'application/json', apikey: process.env.NEXT_PUBLIC_API_KEY },
     })
       .then((res) => res.json())
       .then((res) => {
@@ -149,7 +149,7 @@ export default function Manual() {
     const url = `/api/sections/create`;
     await fetch(url, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+      headers: { 'content-type': 'application/json', apikey: process.env.NEXT_PUBLIC_API_KEY },
       body: JSON.stringify(form),
     })
       .then((res) => res.json())
@@ -187,7 +187,7 @@ export default function Manual() {
     const url = `/api/content/create`;
     await fetch(url, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+      headers: { 'content-type': 'application/json', apikey: process.env.NEXT_PUBLIC_API_KEY },
       body: JSON.stringify(form),
     })
       .then((res) => res.json())
@@ -240,7 +240,7 @@ export default function Manual() {
     setLoading(true);
     const url = `/api/manuals/${slug}`;
     await fetch(url, {
-      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+      headers: { 'content-type': 'application/json', apikey: process.env.NEXT_PUBLIC_API_KEY },
     })
       .then((res) => res.json())
       .then((res) => {
@@ -262,7 +262,7 @@ export default function Manual() {
     const url = `/api/manuals/update`;
     await fetch(url, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+      headers: { 'content-type': 'application/json', apikey: process.env.NEXT_PUBLIC_API_KEY },
       body: JSON.stringify(form),
     })
       .then((res) => res.json())

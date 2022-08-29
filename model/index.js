@@ -1,5 +1,5 @@
-require('dotenv').config();
 const config = require('../config');
+console.log(config.api);
 
 const thinky = require('thinky')(config.api);
 const r = thinky.r;

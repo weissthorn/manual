@@ -1,6 +1,3 @@
-'use strict';
-require('dotenv').config();
-
 const slug = () => {
   return Math.random().toString(32).substring(2, 7) + Math.random().toString(32).substring(2, 7);
 };
@@ -33,12 +30,12 @@ const asyncForEach = async (array, callback) => {
 };
 
 const withAuth = async (req, res) => {
-  var allowlist = process.env.CLIENT_ORIGINS.split(',');
+  var allowlist = process.env.NEXT_PUBLIC_CLIENT_ORIGINS.split(',');
 
   if (allowlist.indexOf(req.headers.host) !== -1) {
     const apikey = req.headers.apikey;
 
-    if (apikey !== process.env.API_KEY) {
+    if (apikey !== process.env.NEXT_PUBLIC_API_KEY) {
       res.status(400).send({ success: false, error: 'Invalid API key' });
       res.end();
     }

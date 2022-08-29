@@ -27,7 +27,7 @@ export default function Login() {
   const isConfigured = async () => {
     const url = `api/users/config`;
     await fetch(url, {
-      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+      headers: { 'content-type': 'application/json', apikey: process.env.NEXT_PUBLIC_API_KEY },
     })
       .then((res) => res.json())
       .then((res) => {
@@ -57,7 +57,7 @@ export default function Login() {
 
     await fetch(url, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+      headers: { 'content-type': 'application/json', apikey: process.env.NEXT_PUBLIC_API_KEY },
       body: JSON.stringify(data),
     })
       .then((res) => res.json())

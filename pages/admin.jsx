@@ -39,7 +39,7 @@ export default function Admin() {
     setLoading(true);
     const url = `/api/users?page=1&limit=1000`;
     await fetch(url, {
-      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+      headers: { 'content-type': 'application/json', apikey: process.env.NEXT_PUBLIC_API_KEY },
     })
       .then((res) => res.json())
       .then((res) => {
@@ -56,7 +56,7 @@ export default function Admin() {
     setLoading(true);
     const url = `/api/users/search?query=${query}&page=1&limit=1000`;
     await fetch(url, {
-      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+      headers: { 'content-type': 'application/json', apikey: process.env.NEXT_PUBLIC_API_KEY },
     })
       .then((res) => res.json())
       .then((res) => {
@@ -114,7 +114,7 @@ export default function Admin() {
     const url = `/api/users/create`;
     await fetch(url, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+      headers: { 'content-type': 'application/json', apikey: process.env.NEXT_PUBLIC_API_KEY },
       body: JSON.stringify(form),
     })
       .then((res) => res.json())
@@ -137,7 +137,7 @@ export default function Admin() {
     const url = `/api/users/update`;
     await fetch(url, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+      headers: { 'content-type': 'application/json', apikey: process.env.NEXT_PUBLIC_API_KEY },
       body: JSON.stringify(form),
     })
       .then((res) => res.json())

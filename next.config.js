@@ -1,12 +1,13 @@
-require('dotenv').config();
-const webpack = require('webpack');
-
 module.exports = {
-  future: {
-    webpack5: true,
+  reactStrictMode: false,
+  swcMinify: true,
+  poweredByHeader: false,
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true,
   },
-  webpack: (config) => {
-    config.plugins.push(new webpack.EnvironmentPlugin(process.env));
-    return config;
+  compiler: {
+    removeConsole: true,
   },
 };

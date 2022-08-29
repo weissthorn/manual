@@ -33,7 +33,7 @@ export default function Login() {
 
     await fetch(url, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', apikey: process.env.API_KEY },
+      headers: { 'content-type': 'application/json', apikey: process.env.NEXT_PUBLIC_API_KEY },
       body: JSON.stringify(data),
     })
       .then((res) => res.json())
@@ -72,7 +72,7 @@ export default function Login() {
         <FlexboxGrid justify="center">
           <FlexboxGrid.Item colspan={12}>
             <div className="login center">
-              <h3>{process.env.SITE_NAME}</h3>
+              <h3>{process.env.NEXT_PUBLIC_SITE_NAME}</h3>
               <p>Login into your account</p>
               <br />
               <Panel bordered style={{ padding: 20 }}>

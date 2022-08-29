@@ -28,6 +28,7 @@ const index = async (req, res, next) => {
       .getJoin()
       .slice(off, limit)
       .then((data) => {
+        console.log(data);
         data = data
           .slice()
           .sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix())
