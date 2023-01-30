@@ -43,4 +43,10 @@ const newUser = async (req, res) => {
   });
 };
 
+export const config = {
+  api: {
+    requestLimit: '50mb',
+  },
+};
+
 export default newUser;
