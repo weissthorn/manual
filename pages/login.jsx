@@ -1,23 +1,14 @@
-import React, { Component } from 'react';
-import {
-  Container,
-  Form,
-  FlexboxGrid,
-  Panel,
-  FormGroup,
-  FormControl,
-  Button,
-  ButtonToolbar,
-} from 'rsuite';
+import { useState } from 'react';
+import { Input, Button, Card, Spacer } from '@geist-ui/core';
 import { useRouter } from 'next/router';
 import { setCookie } from 'nookies';
 
-export default function Login() {
+const Login = () => {
   const router = useRouter();
-  const [loading, setLoading] = React.useState(false);
-  const [email, setEmail] = React.useState();
-  const [password, setPassword] = React.useState();
-  const [notify, setNotify] = React.useState();
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [notify, setNotify] = useState();
 
   const handleEmail = (email) => {
     setEmail(email);
@@ -67,49 +58,42 @@ export default function Login() {
   return (
     <div className="show-fake-browser login-page">
       <title>Login - Manual</title>
+      <Spacer h={10} />
+      <div className="form center">
+        <h3>{process.env.NEXT_PUBLIC_SITE_NAME}</h3>
+        <p>Login into your account</p>
+        <Spacer />
+        <Card shadow>
+          <div className="bordered">
+            <p style={{ color: 'red', marginBottom: 15 }}>{notify}</p>
 
-      <Container>
-        <FlexboxGrid justify="center">
-          <FlexboxGrid.Item colspan={12}>
-            <div className="login center">
-              <h3>{process.env.NEXT_PUBLIC_SITE_NAME}</h3>
-              <p>Login into your account</p>
-              <br />
-              <Panel bordered style={{ padding: 20 }}>
-                <Form fluid>
-                  <p style={{ color: 'red', marginBottom: 15 }}>{notify}</p>
-
-                  <FormGroup>
-                    <FormControl
-                      name="email"
-                      type="email"
-                      placeholder="Email address"
-                      onChange={handleEmail}
-                      required
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <FormControl
-                      name="password"
-                      type="password"
-                      placeholder="Password"
-                      onChange={handlePass}
-                      required
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <ButtonToolbar>
-                      <Button size="lg" block color="blue" loading={loading} onClick={login}>
-                        Sign in
-                      </Button>
-                    </ButtonToolbar>
-                  </FormGroup>
-                </Form>
-              </Panel>
-            </div>
-          </FlexboxGrid.Item>
-        </FlexboxGrid>
-      </Container>
+            <Input
+              width={'100%'}
+              name="email"
+              htmlType="email"
+              placeholder="Email address"
+              onChange={(e) => handleEmail(e.target.value)}
+              required
+            />
+            <Spacer />
+            <Input.Password
+              width={'100%'}
+              name="password"
+              htmlType="password"
+              placeholder="Password"
+              onChange={(e) => handlePass(e.target.value)}
+              required
+            />
+            <Spacer />
+            <Button width={'100%'} type="secondary-light" loading={loading} onClick={login}>
+              Sign in
+            </Button>
+          </div>
+        </Card>
+        <Spacer h={3} />
+      </div>
     </div>
   );
-}
+};
+
+export default Login;

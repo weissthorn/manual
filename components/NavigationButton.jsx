@@ -1,5 +1,6 @@
 import React from 'react';
-import { Icon, IconButton } from 'rsuite';
+import { Button, Link } from '@geist-ui/core';
+import { ChevronLeft, ChevronRight } from '@geist-ui/icons';
 
 const prevTitle = (manual, content) => {
   const sections = manual.sections;
@@ -15,7 +16,7 @@ const prevTitle = (manual, content) => {
   if (currentContents.length > currentContentKey && currentContentKey !== 0) {
     prev = currentContentKey - 1;
     prev = currentContents[prev];
-    prev = prev ? prev.title : false;
+    prev = prev ? prev?.title : false;
   } //Get previous section and use
   else if (sections.length > currentSectionKey && currentSectionKey !== 0) {
     prev = currentSectionKey - 1;
@@ -24,7 +25,7 @@ const prevTitle = (manual, content) => {
       let prevContents = prev.contents,
         length = prev.contents.length - 1;
       prev = prevContents[length];
-      prev = prev.title;
+      prev = prev?.title;
       prev = prev ? prev : false;
     } else {
       prev = false;
@@ -49,7 +50,7 @@ const prevLink = (manual, content) => {
     prev = currentContentKey - 1;
     prev = currentContents[prev];
     if (prev) {
-      prev = `/m/${manual.slug}/${prev.slug}`;
+      prev = `/m/${manual?.slug}/${prev?.slug}`;
       prev = prev ? prev : false;
     } else {
       prev = false;
@@ -62,7 +63,7 @@ const prevLink = (manual, content) => {
       let prevContents = prev.contents,
         length = prev.contents.length - 1;
       prev = prevContents[length];
-      prev = `/m/${manual.slug}/${prev.slug}`;
+      prev = `/m/${manual?.slug}/${prev?.slug}`;
       prev = prev ? prev : false;
     } else {
       prev = false;
@@ -93,9 +94,9 @@ const nextTitle = (manual, content) => {
     next = currentSectionKey + 1;
     next = sections[next];
     if (next) {
-      let nextContents = next.contents;
+      let nextContents = next?.contents;
       next = nextContents[0];
-      next = next ? next.title : false;
+      next = next ? next?.title : false;
     } else {
       next = false;
     }
@@ -119,7 +120,7 @@ const nextLink = (manual, content) => {
   if (currentContents.length > currentContentKey && last !== 1) {
     next = currentContentKey + 1;
     next = currentContents[next];
-    next = next && next.id ? `/m/${manual.slug}/${next.slug}` : false;
+    next = next && next?.id ? `/m/${manual?.slug}/${next?.slug}` : false;
   } //Get nextious section and use
   else if (sections.length > currentSectionKey) {
     next = currentSectionKey + 1;
@@ -127,7 +128,7 @@ const nextLink = (manual, content) => {
     if (next) {
       let nextContents = next.contents;
       next = nextContents[0];
-      next = next && next.id ? `/m/${manual.slug}/${next.slug}` : false;
+      next = next && next.id ? `/m/${manual?.slug}/${next?.slug}` : false;
     } else {
       next = false;
     }
@@ -153,18 +154,17 @@ const link = (manual, content, forward) => {
 };
 
 const NavigationButton = ({ manual, content, forward }) => (
-  <IconButton
-    appearance="subtle"
-    icon={<Icon icon={forward ? 'chevron-right' : 'chevron-left'} />}
-    placement={forward ? 'right' : 'left'}
-    style={{
-      float: forward ? 'right' : 'left',
-      display: title(manual, content, forward) ? 'inline-block' : 'none',
-    }}
-    href={link(manual, content, forward)}
-  >
-    {title(manual, content, forward)}
-  </IconButton>
+  <>
+    {forward ? (
+      <Button auto iconRight={<ChevronRight />} style={{ float: 'right' }}>
+        <Link href={link(manual, content, forward)}>{title(manual, content, forward)}</Link>
+      </Button>
+    ) : (
+      <Button auto icon={<ChevronLeft />}>
+        <Link href={link(manual, content, forward)}>{title(manual, content, forward)}</Link>
+      </Button>
+    )}
+  </>
 );
 
 export default NavigationButton;

@@ -1,29 +1,29 @@
-import React from 'react';
-import { Container, Content, InputPicker, Table, Input, Modal, Button, Alert } from 'rsuite';
-const { Column, HeaderCell, Cell } = Table;
+import { useState, useEffect } from 'react';
+import { Button, Modal, Input, Select, Table, Loading, Link, Spacer } from '@geist-ui/core';
+import toast, { Toaster } from 'react-hot-toast';
 import Header from '../components/Header';
 import moment from 'moment';
 import { parseCookies } from 'nookies';
 import { useRouter } from 'next/router';
 
 export default function Admin() {
-  const [loading, setLoading] = React.useState(false);
-  const [modal, setModal] = React.useState(false);
-  const [modal2, setModal2] = React.useState(false);
-  const [users, setUsers] = React.useState([]);
-  const [user, setUser] = React.useState({});
-  const [profile, setProfile] = React.useState({});
-  const [notify, setNotify] = React.useState();
+  const [loading, setLoading] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [modal2, setModal2] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [field, setField] = useState({});
+  const [user, setUser] = useState({});
+  const [profile, setProfile] = useState({});
   const router = useRouter();
   const cookie = parseCookies();
 
-  React.useEffect(() => {
+  useEffect(() => {
     let user = cookie;
     user = user && user._auth ? JSON.parse(user._auth) : null;
     user = user && user.role === 'reader' ? router.push('/401') : null;
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     getUsers();
   }, []);
 
@@ -47,7 +47,7 @@ export default function Admin() {
           setUsers(res.data);
           setLoading(false);
         } else {
-          setNotify(res.error);
+          toast.error(res.error);
         }
       });
   };
@@ -64,7 +64,7 @@ export default function Admin() {
           setUsers(res.data);
           setLoading(false);
         } else {
-          setNotify(res.error);
+          toast.error(res.error);
         }
       });
   };
@@ -77,36 +77,6 @@ export default function Admin() {
     } else {
       getUsers();
     }
-  };
-
-  const handleRole = (value) => {
-    user.role = value;
-    setUser(user);
-  };
-
-  const handleName = (value) => {
-    profile.name = value;
-    setProfile(profile);
-  };
-
-  const handleEmail = (value) => {
-    profile.email = value;
-    setProfile(profile);
-  };
-
-  const handlePassword = (value) => {
-    profile.password = value;
-    setProfile(profile);
-  };
-
-  const handleRoleChange = (value) => {
-    profile.role = value;
-    setProfile(profile);
-  };
-
-  const handleBannedChange = (value) => {
-    profile.status = value;
-    setProfile(profile);
   };
 
   const addUser = async (form) => {
@@ -124,9 +94,9 @@ export default function Admin() {
           getUsers();
           setUser({});
           toggleModal();
-          Alert.info('User added', 5000);
+          toast.success('User added', 5000);
         } else {
-          setNotify(res.error);
+          toast.error(res.error);
           setLoading(false);
         }
       });
@@ -147,9 +117,9 @@ export default function Admin() {
           getUsers();
           setProfile({});
           toggleModal2();
-          Alert.info('User detail updated', 5000);
+          toast.success('User detail updated', 5000);
         } else {
-          setNotify(res.error);
+          toast.error(res.error);
           setLoading(false);
         }
       });
@@ -163,249 +133,205 @@ export default function Admin() {
     toggleModal2();
   };
 
-  const save = (e) => {
-    e.preventDefault();
+  const save = async () => {
+    const { name, email, password, role } = field;
 
-    let field,
-      form = user;
-    field = document.querySelectorAll('.user');
-    field.forEach((item) => {
-      let { name, value } = item;
-      form[name] = value;
-    });
-
-    const { name, email, password, role } = form;
-
-    if (!name) {
-      setNotify('Name is too short !');
+    if (!name || name.length < 3) {
+      toast.error('Name is too short ! Minimum 3 characters');
     } else if (!email) {
-      setNotify('Invalid email address!');
-    } else if (!password) {
-      setNotify('Password is too short!');
+      toast.error('Invalid email address!');
+    } else if (!password || password.length < 6) {
+      toast.error('Password is too short! Minimum 6 characters.');
     } else if (!role) {
-      setNotify('Choose a role!');
+      toast.error('Choose a role!');
     } else {
-      setNotify('');
-      addUser(form);
+      await addUser(field);
     }
   };
 
-  const saveEdit = (e) => {
-    e.preventDefault();
+  const saveEdit = async () => {
+    const { name, email, password, role } = profile;
 
-    let form = profile;
-
-    if (!form.name) {
-      setNotify('Name is too short !');
-    } else if (!form.email) {
-      setNotify('Invalid email address!');
-    } else if (!form.role) {
-      setNotify('Choose a role!');
+    if (!name || name.length < 3) {
+      toast.error('Name is too short ! Minimum 3 characters');
+    } else if (!email) {
+      toast.error('Invalid email address!');
+    } else if (!role) {
+      toast.error('Choose a role!');
     } else {
-      setNotify('');
-      updateUser(form);
+      await updateUser(profile);
     }
   };
 
   return (
     <div className="show-fake-browser navbar-page">
-      <Modal size={'xs'} show={modal} backdrop="static">
-        <form onSubmit={save}>
-          <Modal.Header>
-            <Modal.Title>Add user</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Input
-              placeholder="Name"
-              type="name"
-              name="name"
-              className="user"
-              // required
-            />
-            <br />
-            <Input
-              placeholder="Email"
-              type="email"
-              name="email"
-              className="user"
-              // required
-            />
-            <br />
-            <Input
-              placeholder="Password"
-              type="password"
-              name="password"
-              className="user"
-              // required
-            />
-            <br />
-            <InputPicker
-              data={[
-                { label: 'Admin', value: 'admin' },
-                { label: 'Editor', value: 'editor' },
-                { label: 'Reader', value: 'reader' },
-              ]}
-              placeholder="Role"
-              block
-              required
-              onChange={handleRole}
-            />
-            <br />
+      <Toaster />
+      <Modal visible={modal} disableBackdropClick>
+        <Modal.Title>Add user</Modal.Title>
+        <Modal.Content>
+          <Input
+            width={'100%'}
+            placeholder="Name"
+            onChange={(e) => setField({ ...field, name: e.target.value })}
+          />
+          <Spacer />
+          <Input
+            width={'100%'}
+            placeholder="Email"
+            htmlType="email"
+            onChange={(e) => setField({ ...field, email: e.target.value })}
+          />
+          <Spacer />
+          <Input.Password
+            width={'100%'}
+            placeholder="Password"
+            onChange={(e) => setField({ ...field, password: e.target.value })}
+          />
+          <Spacer />
 
-            <span style={{ color: '#cb0000' }}>{notify}</span>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button type="submit" color="blue" loading={loading}>
-              Save
-            </Button>
-            <Button onClick={toggleModal} appearance="subtle">
-              Cancel
-            </Button>
-          </Modal.Footer>
-        </form>
+          <Select
+            width={'100%'}
+            placeholder="Role"
+            onChange={(role) => setField({ ...field, role: role })}
+          >
+            {[
+              { label: 'Admin', value: 'admin' },
+              { label: 'Editor', value: 'editor' },
+              { label: 'Reader', value: 'reader' },
+            ].map((item, key) => (
+              <Select.Option key={key} value={item.value}>
+                {item.label}
+              </Select.Option>
+            ))}
+          </Select>
+          <Spacer />
+        </Modal.Content>
+
+        <Modal.Action onClick={toggleModal} passive>
+          Cancel
+        </Modal.Action>
+        <Modal.Action onClick={save} loading={loading}>
+          Save
+        </Modal.Action>
       </Modal>
-      <Modal size={'xs'} show={modal2} onHide={toggleModal2} backdrop="static">
-        <form onSubmit={saveEdit}>
-          <Modal.Header>
-            <Modal.Title>Edit user</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Input
-              placeholder="Name"
-              type="name"
-              name="name"
-              onChange={handleName}
-              defaultValue={profile.name}
-              className="user2"
-            />
-            <br />
-            <Input
-              placeholder="Email"
-              type="email"
-              name="email"
-              onChange={handleEmail}
-              defaultValue={profile.email}
-              className="user2"
-            />
-            <br />
-            <Input
-              placeholder="Type password to override existing password."
-              type="password"
-              name="password"
-              className="user"
-              onChange={handlePassword}
-              className="user2"
-            />
-            <br />
-            <InputPicker
-              data={[
-                { label: 'Admin', value: 'admin' },
-                { label: 'Editor', value: 'editor' },
-                { label: 'Reader', value: 'reader' },
-              ]}
-              defaultValue={profile.role}
-              placeholder="Role"
-              block
-              required
-              onChange={handleRoleChange}
-              className="user2"
-            />
-            <br />
-            <InputPicker
-              data={[
-                { label: 'Active', value: 'active' },
-                { label: 'Not active', value: 'not active' },
-              ]}
-              defaultValue={profile.status}
-              placeholder="Active or not active?"
-              block
-              required
-              onChange={handleBannedChange}
-              className="user2"
-            />
-            <br />
+      <Modal visible={modal2} onClose={toggleModal2} disableBackdropClick>
+        <Modal.Title>Edit user</Modal.Title>
+        <Modal.Content>
+          <Input
+            width={'100%'}
+            placeholder="Name"
+            value={profile.name}
+            onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+          />
+          <Spacer />
+          <Input
+            width={'100%'}
+            placeholder="Email"
+            value={profile.email}
+            onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+          />
+          <Spacer />
+          <Input.Password
+            width={'100%'}
+            placeholder="Type password to override existing password."
+            value={profile.password}
+            onChange={(e) => setProfile({ ...profile, password: e.target.value })}
+          />
+          <Spacer />
+          <Select
+            width={'100%'}
+            value={profile.role}
+            placeholder="Role"
+            onChange={(role) => setProfile({ ...profile, role: role })}
+          >
+            {[
+              { label: 'Admin', value: 'admin' },
+              { label: 'Editor', value: 'editor' },
+              { label: 'Reader', value: 'reader' },
+            ].map((item, key) => (
+              <Select.Option key={key} value={item.value}>
+                {item.label}
+              </Select.Option>
+            ))}
+          </Select>
+          <Spacer />
+          <Select
+            width={'100%'}
+            value={profile.status}
+            placeholder="Status"
+            onChange={(status) => setProfile({ ...profile, status: status })}
+          >
+            <Select.Option value={'active'}>Active</Select.Option>
+            <Select.Option value={'not active'}>Not active</Select.Option>
+          </Select>
 
-            <span style={{ color: '#cb0000' }}>{notify}</span>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button type="submit" color="blue" loading={loading}>
-              Save
-            </Button>
-            <Button onClick={toggleModal2} appearance="subtle">
-              Cancel
-            </Button>
-          </Modal.Footer>
-        </form>
+          <Spacer />
+        </Modal.Content>
+
+        <Modal.Action onClick={toggleModal2} passive>
+          Cancel
+        </Modal.Action>
+        <Modal.Action onClick={saveEdit} loading={loading}>
+          Save
+        </Modal.Action>
       </Modal>
 
-      <Container>
-        <Header title="Admin" />
+      <Header title="Admin" />
 
-        <Content className="container">
-          <br />
-          <br />
+      <div className="container">
+        <Spacer h={7} />
+        <div>
           <div>
-            <div>
-              <div className="admin-search">
-                <Input
-                  size="lg"
-                  type="search"
-                  placeholder="Search using name, email...."
-                  onChange={handleSearch}
-                />
-              </div>
-
-              <h4 className="top-heading">
-                {users.length}
-                {users.length <= 1 ? ' User' : ' Users'}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <Button appearance="default" onClick={toggleModal}>
-                  + Add user
-                </Button>
-              </h4>
+            <div className="admin-search">
+              <Input
+                width={'100%'}
+                htmlType="search"
+                placeholder="Search using name, email...."
+                onChange={(e) => handleSearch(e.target.value)}
+              />
             </div>
-            <br />
-            <br />
 
-            <Table loading={loading} height={600} data={users}>
-              <Column width={200} fixed>
-                <HeaderCell>Name</HeaderCell>
-                <Cell dataKey="name" />
-              </Column>
-              <Column width={250} fixed>
-                <HeaderCell>Email</HeaderCell>
-                <Cell dataKey="email" />
-              </Column>
-              <Column width={150} fixed>
-                <HeaderCell>Role</HeaderCell>
-                <Cell dataKey="role" />
-              </Column>
-              <Column width={200} fixed>
-                <HeaderCell>Date</HeaderCell>
-                <Cell>
-                  {(rowData) => {
-                    return <span>{moment(rowData.createdAt).format('MMM D, YYYY @ h:mm A')}</span>;
-                  }}
-                </Cell>
-              </Column>
-              <Column width={120} fixed="right">
-                <HeaderCell>Action</HeaderCell>
-                <Cell>
-                  {(rowData) => {
-                    return (
-                      <span>
-                        <Button size="xs" appearance="ghost" onClick={edit.bind(this, rowData.id)}>
-                          {' '}
-                          Edit{' '}
-                        </Button>
-                      </span>
-                    );
-                  }}
-                </Cell>
-              </Column>
-            </Table>
+            <h4 className="top-heading">
+              {users.length}
+              {users.length <= 1 ? ' User' : ' Users'}
+              <Spacer w={3} inline />
+              <Button auto onClick={toggleModal}>
+                + Add user
+              </Button>
+            </h4>
           </div>
-        </Content>
-      </Container>
+          <Spacer h={2} />
+
+          <Table data={users}>
+            <Table.Column prop="name" label="Name" />
+            <Table.Column prop="email" label="Email" />
+            <Table.Column prop="role" label="Role" />
+            <Table.Column
+              prop="status"
+              label="Status"
+              render={(status) => (
+                <span style={{ color: status === 'active' ? 'green' : 'red' }}>{status}</span>
+              )}
+            />
+            <Table.Column
+              prop="createdAt"
+              label="Date"
+              render={(_, rowData) => (
+                <span>{moment(rowData.createdAt).format('MMM D, YYYY @ h:mm A')}</span>
+              )}
+            />
+            <Table.Column
+              prop="action"
+              label="Action"
+              render={(_, rowData) => (
+                <Button auto scale={0.5} type="secondary-light" onClick={() => edit(rowData.id)}>
+                  Edit
+                </Button>
+              )}
+            />
+          </Table>
+        </div>
+      </div>
     </div>
   );
 }

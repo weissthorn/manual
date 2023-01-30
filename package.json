@@ -15,7 +15,9 @@
     "fix_style": "stylelint '**/*.scss' --syntax scss --fix"
   },
   "dependencies": {
-    "bcrypt": "^5.0.1",
+    "@geist-ui/core": "^2.3.8",
+    "@geist-ui/icons": "^1.0.2",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dompurify": "^2.2.9",
     "moment": "^2.29.1",
@@ -23,10 +25,11 @@
     "nookies": "^2.5.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "rsuite": "^4.1.5",
+    "react-hot-toast": "^2.4.0",
     "signale": "^1.4.0",
     "slugify": "^1.5.3",
     "suneditor-react": "^2.16.5",
+    "swr": "^2.0.3",
     "thinky": "^2.3.9",
     "winston": "^3.3.3"
   },

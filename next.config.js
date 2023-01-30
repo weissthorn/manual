@@ -1,5 +1,5 @@
 module.exports = {
-  reactStrictMode: false,
+  reactStrictMode: true,
   swcMinify: true,
   devIndicators: {
     buildActivity: false,

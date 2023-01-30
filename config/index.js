@@ -1,14 +1,12 @@
 'use strict';
 
-console.log(process.env.DB_HOST);
-
 module.exports = {
   api: {
-    host: process.env.DB_HOST,
-    db: process.env.DB_NAME,
-    port: process.env.DB_PORT,
+    host: process.env.NEXT_PUBLIC_DB_HOST,
+    db: process.env.NEXT_PUBLIC_DB_NAME,
+    port: process.env.NEXT_PUBLIC_DB_PORT,
   },
   server: {
-    port: process.env.PORT,
+    port: process.env.NEXT_PUBLIC_PORT,
   },
 };

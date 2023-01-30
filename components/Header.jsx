@@ -1,5 +1,7 @@
 import React from 'react';
-import { Header, Navbar, Dropdown, Nav, Icon } from 'rsuite';
+import { Popover, User, Link } from '@geist-ui/core';
+import { ChevronDown } from '@geist-ui/icons';
+
 import Head from 'next/head';
 import { parseCookies, destroyCookie } from 'nookies';
 import { useRouter } from 'next/router';
@@ -17,6 +19,12 @@ export default function MainHeader({ title, description }) {
     router.push('/login');
   };
 
+  const getFirstName = (name) => {
+    name = name?.split(' ');
+    name = name?.length ? name[0] : '';
+    return name;
+  };
+
   const isLoggedIn = () => {
     let user = cookie;
     user = user && user._auth ? JSON.parse(user._auth) : {};
@@ -25,7 +33,7 @@ export default function MainHeader({ title, description }) {
 
   const user = isLoggedIn();
   return (
-    <Header>
+    <>
       <Head>
         <title>{title}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -33,37 +41,46 @@ export default function MainHeader({ title, description }) {
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
       </Head>
-      <Navbar appearance="subtle">
-        <div className="container">
-          <Navbar.Header>
-            <a href="/" className="navbar-brand logo">
-              Manual
-            </a>
-          </Navbar.Header>
-          <Navbar.Body>
-            <Nav pullRight>
-              {user ? (
-                <span>
-                  <Dropdown placement="bottomEnd" title={user.name} icon={<Icon icon="user" />}>
-                    {user.role === 'admin' ? (
-                      <Dropdown.Item href="/admin">Admin</Dropdown.Item>
-                    ) : (
-                      ''
-                    )}
-                    <Dropdown.Item href="/manuals">Manuals</Dropdown.Item>
-                    <Dropdown.Item divider />
-                    <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
-                  </Dropdown>
+      <div className="navbar">
+        <div className="inner">
+          <Link href="/">Manual</Link>
+
+          <div className="right">
+            <Popover
+              content={
+                <>
+                  {user.role === 'admin' ? (
+                    <>
+                      <Popover.Item>
+                        <Link href="/admin">Admin</Link>
+                      </Popover.Item>
+                      <Popover.Item line />
+                    </>
+                  ) : (
+                    ''
+                  )}
+                  <Popover.Item>
+                    <Link href="/manuals">Manuals</Link>
+                  </Popover.Item>
+                  <Popover.Item line />
+                  <Popover.Item onClick={logout}>
+                    <Link href="#" icon>
+                      Logout
+                    </Link>
+                  </Popover.Item>
+                </>
+              }
+            >
+              <div className="menu">
+                <User src="/avatar.png" name={getFirstName(user?.name)} />{' '}
+                <span className="icon">
+                  <ChevronDown size={16} />
                 </span>
-              ) : (
-                <span>
-                  <Nav.Item href="/login">Login</Nav.Item>
-                </span>
-              )}
-            </Nav>
-          </Navbar.Body>
+              </div>
+            </Popover>
+          </div>
         </div>
-      </Navbar>
-    </Header>
+      </div>
+    </>
   );
 }
