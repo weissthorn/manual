@@ -28,4 +28,11 @@ const updateUser = async (req, res) => {
   }
 };
 
+export const config = {
+  api: {
+    requestLimit: '50mb',
+  },
+};
+
+
 export default updateUser;

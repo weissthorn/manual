@@ -47,4 +47,10 @@ const index = async (req, res, next) => {
   });
 };
 
+export const config = {
+  api: {
+    requestLimit: '50mb',
+  },
+};
+
 export default index;

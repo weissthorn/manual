@@ -15,4 +15,9 @@ const getManuals = async (req, res) => {
     .catch((err) => logger(err));
 };
 
+export const config = {
+  api: {
+    requestLimit: "50mb",
+  }
+}
 export default getManuals;
