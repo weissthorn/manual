@@ -6,7 +6,7 @@ import moment from 'moment';
 const getManuals = async (req, res) => {
   await withAuth(req, res);
 
-  Manual.orderBy(r.desc('createdAt'))
+  await Manual.orderBy(r.desc('createdAt'))
     .getJoin()
     .then((data) => {
       data = data.slice().sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix());
@@ -17,7 +17,7 @@ const getManuals = async (req, res) => {
 
 export const config = {
   api: {
-    requestLimit: "50mb",
-  }
-}
+    requestLimit: '50mb',
+  },
+};
 export default getManuals;
