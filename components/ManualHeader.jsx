@@ -11,7 +11,7 @@ export default function ManualHeader({ title, description }) {
 
   React.useEffect(() => {
     !cookie._auth ? router.push('/login') : null;
-  }, []);
+  }, [cookie]);
 
   const logout = () => {
     destroyCookie(null, '_auth');
@@ -45,14 +45,14 @@ export default function ManualHeader({ title, description }) {
         <div>
           <Popover
             content={
-              <>
+              <div>
                 {user.role === 'admin' ? (
-                  <>
+                  <div>
                     <Popover.Item>
                       <Link href="/admin">Admin</Link>
                     </Popover.Item>
                     <Popover.Item line />
-                  </>
+                  </div>
                 ) : (
                   ''
                 )}
@@ -65,12 +65,12 @@ export default function ManualHeader({ title, description }) {
                     Logout
                   </Link>
                 </Popover.Item>
-              </>
+              </div>
             }
           >
             <div className="menu">
               <User src="/avatar.png" name={getFirstName(user?.name)} />{' '}
-              <span className="fix-caretss">
+              <span className="fix-caret">
                 <ChevronDown size={16} />
               </span>
             </div>

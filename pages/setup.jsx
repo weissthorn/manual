@@ -84,7 +84,6 @@ export default function Login() {
   return (
     <div className="show-fake-browser login-page">
       <title>Manual</title>
-
       <div className="form center">
         <Spacer h={7} />
         <h3>{process.env.NEXT_PUBLIC_SITE_NAME}</h3>
