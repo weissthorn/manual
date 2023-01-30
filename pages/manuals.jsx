@@ -1,27 +1,40 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import useSWR, { useSWRConfig } from 'swr';
 import { Button, Card, Input, Textarea, Link, Spacer, Modal, Loading } from '@geist-ui/core';
 import Header from '../components/Header';
 import useToken from '../components/Token';
 
 export default function Manuals() {
   const user = useToken();
-  const { mutate } = useSWRConfig();
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState(false);
+  const [manuals, setManual] = useState([]);
   const [field, setField] = useState({ title: '', description: '' });
 
-  const getManuals = async (url) => {
-    return await fetch(url, {
-      headers: { 'content-type': 'application/json', apikey: process.env.NEXT_PUBLIC_API_KEY },
-    }).then((res) => res.json());
-  };
-
-  const { data, error, isLoading } = useSWR('/api/manuals?page=1&limit=1000', getManuals);
+  useEffect(() => {
+    getManuals();
+  }, []);
 
   const toggleModal = () => {
     setModal(!modal);
+  };
+
+  const getManuals = async () => {
+    setLoading(true);
+    const url = '/api/manuals?page=1&limit=1000';
+    return await fetch(url, {
+      headers: { 'content-type': 'application/json', apikey: process.env.NEXT_PUBLIC_API_KEY },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success) {
+          setLoading(false);
+          setManual(res.data);
+        } else {
+          toast.error(res.error);
+          setLoading(false);
+        }
+      });
   };
 
   const addManual = async (form) => {
@@ -36,7 +49,7 @@ export default function Manuals() {
       .then((res) => {
         if (res.success) {
           setLoading(false);
-          mutate('/api/manuals?page=1&limit=1000');
+          getManuals();
           toggleModal();
           toast.success('Manual created successfully');
         } else {
@@ -51,7 +64,7 @@ export default function Manuals() {
     await addManual(form);
   };
 
-  const manual = data?.data.map((item, key) => (
+  const manual = manuals?.map((item, key) => (
     <div key={key}>
       <Card shadow hoverable>
         <div className="org-cards">
@@ -117,7 +130,7 @@ export default function Manuals() {
         </h3>
         <br />
         <br />
-        <center style={{ display: isLoading ? 'block' : 'none' }}>
+        <center style={{ display: loading ? 'block' : 'none' }}>
           <Loading>Loading</Loading>
         </center>
         <div className="grid-3">{manual}</div>
