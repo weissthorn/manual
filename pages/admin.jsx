@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import moment from 'moment';
 import { parseCookies } from 'nookies';
 import { useRouter } from 'next/router';
+import useToken from '../components/Token';
 
 export default function Admin() {
   const [loading, setLoading] = useState(false);
@@ -12,16 +13,13 @@ export default function Admin() {
   const [modal2, setModal2] = useState(false);
   const [users, setUsers] = useState([]);
   const [field, setField] = useState({});
-  const [user, setUser] = useState({});
   const [profile, setProfile] = useState({});
   const router = useRouter();
-  const cookie = parseCookies();
+  const user = useToken;
 
   useEffect(() => {
-    let user = cookie;
-    user = user && user._auth ? JSON.parse(user._auth) : null;
-    user = user && user.role === 'reader' ? router.push('/401') : null;
-  }, []);
+    user && user.role === 'reader' ? router.push('/401') : null;
+  }, [user]);
 
   useEffect(() => {
     getUsers();

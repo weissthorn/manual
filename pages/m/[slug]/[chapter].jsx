@@ -119,7 +119,7 @@ export default function Chapter() {
       <a
         href={`/m/${title}/${item.slug}`}
         id={`${item.slug}`}
-        key={key}
+        key={item.id}
         className={`${chapter === item.slug ? 'active' : ''}`}
       >
         {item.title}
@@ -136,7 +136,7 @@ export default function Chapter() {
       .sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix())
       .reverse();
     let url = contents.map((item, key) => (
-      <div key={key}>
+      <div key={item.id}>
         <a
           href={`/m/${title}/${item.slug}`}
           id={`${item.slug}`}
@@ -382,7 +382,7 @@ export default function Chapter() {
     .sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix())
     .reverse();
   sections = sections.map((item, key) => (
-    <Collapse title={item.title} initialVisible={item.contents.length ? true : false}>
+    <Collapse key={item.id} title={item.title} initialVisible={item.contents.length ? true : false}>
       {getContent(item.contents, manual.slug)}
       <Button
         scale={0.5}
@@ -576,7 +576,6 @@ export default function Chapter() {
           <div className="search">
             <Input
               icon={<Search />}
-              auto
               placeholder={`Search manual....`}
               onChange={(e) => searchContent(e.target.value)}
             />
