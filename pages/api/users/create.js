@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { User } from '../../../model';
 import { withAuth } from '../../../util';
 import logger from '../../../util/log';

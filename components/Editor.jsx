@@ -3,7 +3,7 @@ import SunEditor, { buttonList } from 'suneditor-react';
 
 import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
 
-export default function Editor({ value, onChange }) {
+export default function Editor({ value, height, onChange }) {
   /**
    * @type {React.MutableRefObject<SunEditor>} get type definitions for editor
    */
@@ -16,7 +16,7 @@ export default function Editor({ value, onChange }) {
       <SunEditor
         ref={editorRef}
         setOptions={{
-          height: 200,
+          height: height ? height : 200,
           buttonList: [
             [
               'undo',

@@ -1,5 +1,5 @@
 module.exports = {
-  reactStrictMode: false,
+  reactStrictMode: true,
   swcMinify: true,
   devIndicators: {
     buildActivity: false,
@@ -12,5 +12,6 @@ module.exports = {
   },
   compiler: {
     removeConsole: true,
+    styledComponents: true,
   },
 };

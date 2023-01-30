@@ -1,14 +1,6 @@
 import React from 'react';
-import {
-  Container,
-  Form,
-  FlexboxGrid,
-  Panel,
-  FormGroup,
-  FormControl,
-  Button,
-  ButtonToolbar,
-} from 'rsuite';
+
+import { Input, Button, Card, Spacer } from '@geist-ui/core';
 import { useRouter } from 'next/router';
 import { setCookie } from 'nookies';
 
@@ -75,76 +67,63 @@ export default function Login() {
       });
   };
 
-  const login = (e) => {
-    e.preventDefault();
-    if (name.length < 3) {
-      setNotify('Name is too short!');
+  const login = async () => {
+    if (!name || name.length < 3) {
+      setNotify('Name is too short! Minimum  3 characters.');
     } else if (!email) {
       setNotify('Invalid email address!');
-    } else if (password.length < 3) {
-      setNotify('Password is too short!');
+    } else if (!password || password.length < 6) {
+      setNotify('Password is too short! Minimum  6 characters.');
     } else {
       setNotify('');
       const data = { name, email, password, role: 'admin' };
-      authenticate(data);
+      await authenticate(data);
     }
   };
 
   return (
     <div className="show-fake-browser login-page">
       <title>Manual</title>
-
-      <Container>
-        <FlexboxGrid justify="center">
-          <FlexboxGrid.Item colspan={12}>
-            <div className="login center">
-              <h3>Manual</h3>
-              <p>Setup default account</p>
-              <br />
-              <Panel bordered style={{ padding: 20 }}>
-                <Form fluid>
-                  <p style={{ color: 'red', marginBottom: 15 }}>{notify}</p>
-
-                  <FormGroup>
-                    <FormControl
-                      name="name"
-                      type="email"
-                      placeholder="Admin Name"
-                      onChange={handleName}
-                      required
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <FormControl
-                      name="email"
-                      type="email"
-                      placeholder="Admin Email address"
-                      onChange={handleEmail}
-                      required
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <FormControl
-                      name="password"
-                      type="password"
-                      placeholder="Admin Password"
-                      onChange={handlePass}
-                      required
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <ButtonToolbar>
-                      <Button size="lg" block color="blue" loading={loading} onClick={login}>
-                        Get started &rarr;
-                      </Button>
-                    </ButtonToolbar>
-                  </FormGroup>
-                </Form>
-              </Panel>
-            </div>
-          </FlexboxGrid.Item>
-        </FlexboxGrid>
-      </Container>
+      <div className="form center">
+        <Spacer h={7} />
+        <h3>{process.env.NEXT_PUBLIC_SITE_NAME}</h3>
+        <p>Setup Admin account</p>
+        <Spacer />
+        <Card shadow>
+          <div className="bordered">
+            <p style={{ color: 'red', marginBottom: 15 }}>{notify}</p>
+            <Input
+              width={'100%'}
+              name="name"
+              placeholder="Admin Name"
+              onChange={(e) => handleName(e.target.value)}
+              required
+            />
+            <Spacer />
+            <Input
+              width={'100%'}
+              name="email"
+              htmlType="email"
+              placeholder="Email address"
+              onChange={(e) => handleEmail(e.target.value)}
+              required
+            />
+            <Spacer />
+            <Input.Password
+              width={'100%'}
+              name="password"
+              htmlType="password"
+              placeholder="Password"
+              onChange={(e) => handlePass(e.target.value)}
+              required
+            />
+            <Spacer />
+            <Button width={'100%'} type="secondary-light" loading={loading} onClick={login}>
+              Get started
+            </Button>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 }

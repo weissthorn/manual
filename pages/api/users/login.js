@@ -1,6 +1,6 @@
 import { User } from '../../../model';
 import { withAuth } from '../../../util';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 const userLogin = async (req, res, next) => {
   await withAuth(req, res, next);
@@ -15,7 +15,7 @@ const userLogin = async (req, res, next) => {
         } else if (result && data[0].status !== 'active') {
           res.send({
             success: false,
-            error: 'This account has been banned because of misconducts. Please contact admin.',
+            error: 'This account is not active. Please contact admin.',
           });
         } else {
           res.send({

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Dropdown, Nav, Icon } from 'rsuite';
+import { Popover, User, Link } from '@geist-ui/core';
+import { ChevronDown } from '@geist-ui/icons';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { parseCookies, destroyCookie } from 'nookies';
@@ -10,7 +11,7 @@ export default function ManualHeader({ title, description }) {
 
   React.useEffect(() => {
     !cookie._auth ? router.push('/login') : null;
-  }, []);
+  }, [cookie]);
 
   const logout = () => {
     destroyCookie(null, '_auth');
@@ -25,8 +26,14 @@ export default function ManualHeader({ title, description }) {
 
   const user = isLoggedIn();
 
+  const getFirstName = (name) => {
+    name = name?.split(' ');
+    name = name?.length ? name[0] : '';
+    return name;
+  };
+
   return (
-    <span className="user">
+    <div className="user-profile">
       <Head>
         <title>{title}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -35,19 +42,43 @@ export default function ManualHeader({ title, description }) {
         <meta property="og:description" content={description} />
       </Head>
       {user ? (
-        <span>
-          <Dropdown placement="bottomEnd" title={user.name} icon={<Icon icon="user" />}>
-            {user.role === 'admin' ? <Dropdown.Item href="/admin">Admin</Dropdown.Item> : ''}
-            <Dropdown.Item href="/manuals">Manuals</Dropdown.Item>
-            <Dropdown.Item divider />
-            <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
-          </Dropdown>
-        </span>
+        <div>
+          <Popover
+            content={
+              <div>
+                {user.role === 'admin' ? (
+                  <div>
+                    <Popover.Item>
+                      <Link href="/admin">Admin</Link>
+                    </Popover.Item>
+                    <Popover.Item line />
+                  </div>
+                ) : (
+                  ''
+                )}
+                <Popover.Item>
+                  <Link href="/manuals">Manuals</Link>
+                </Popover.Item>
+                <Popover.Item line />
+                <Popover.Item onClick={logout}>
+                  <Link href="#" icon>
+                    Logout
+                  </Link>
+                </Popover.Item>
+              </div>
+            }
+          >
+            <div className="menu">
+              <User src="/avatar.png" name={getFirstName(user?.name)} />{' '}
+              <span className="fix-caret">
+                <ChevronDown size={16} />
+              </span>
+            </div>
+          </Popover>
+        </div>
       ) : (
-        <span>
-          <Nav.Item href="/login">Login</Nav.Item>
-        </span>
+        <Link href="/login">Login</Link>
       )}
-    </span>
+    </div>
   );
 }

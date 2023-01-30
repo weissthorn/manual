@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from 'rsuite';
+import { Button, Link, Spacer } from '@geist-ui/core';
 
 export default class NotFound extends Component {
   render() {
@@ -8,17 +8,11 @@ export default class NotFound extends Component {
         <title>Page not found - Manual</title>
 
         <div style={{ textAlign: 'center', padding: 10 }}>
-          <br />
-          <br />
-          <br />
-          <br />
+          <Spacer h={10} />
           <h3>Oops ! Page you are looking for doesn't exists or deleted.</h3>
-          <br />
-          <br />
-          <br />
-          <br />
-          <Button size="lg" color="blue" href="/">
-            &larr; Go back home
+          <Spacer h={5} />
+          <Button auto type="success">
+            <Link href="/">&larr; Go back home</Link>
           </Button>
         </div>
       </div>
