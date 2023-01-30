@@ -6,6 +6,7 @@ export default function useToken() {
   const [token, setToken] = useState({
     id: '',
     name: '',
+    role: '',
   });
 
   useEffect(() => {

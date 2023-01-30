@@ -1,30 +1,23 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { Popover, User, Link } from '@geist-ui/core';
 import { ChevronDown } from '@geist-ui/icons';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { parseCookies, destroyCookie } from 'nookies';
+import { destroyCookie } from 'nookies';
+import useToken from './Token';
 
 export default function ManualHeader({ title, description }) {
   const router = useRouter();
-  const cookie = parseCookies();
+  const user = useToken();
 
-  React.useEffect(() => {
-    !cookie._auth ? router.push('/login') : null;
-  }, [cookie]);
+  useEffect(() => {
+    user && user.id ? router.push('/login') : null;
+  }, []);
 
   const logout = () => {
     destroyCookie(null, '_auth');
     router.push('/login');
   };
-
-  const isLoggedIn = () => {
-    let user = cookie;
-    user = user && user._auth ? JSON.parse(user._auth) : {};
-    return user;
-  };
-
-  const user = isLoggedIn();
 
   const getFirstName = (name) => {
     name = name?.split(' ');

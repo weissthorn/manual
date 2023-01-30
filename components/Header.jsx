@@ -1,17 +1,17 @@
 import React from 'react';
 import { Popover, User, Link } from '@geist-ui/core';
 import { ChevronDown } from '@geist-ui/icons';
-
 import Head from 'next/head';
-import { parseCookies, destroyCookie } from 'nookies';
+import { destroyCookie } from 'nookies';
 import { useRouter } from 'next/router';
+import useToken from './Token';
 
 export default function MainHeader({ title, description }) {
   const router = useRouter();
-  const cookie = parseCookies();
+  const user = useToken();
 
   React.useEffect(() => {
-    !cookie._auth ? router.push('/login') : null;
+    user && user.id ? router.push('/login') : null;
   }, []);
 
   const logout = () => {
@@ -25,13 +25,6 @@ export default function MainHeader({ title, description }) {
     return name;
   };
 
-  const isLoggedIn = () => {
-    let user = cookie;
-    user = user && user._auth ? JSON.parse(user._auth) : {};
-    return user;
-  };
-
-  const user = isLoggedIn();
   return (
     <div>
       <Head>

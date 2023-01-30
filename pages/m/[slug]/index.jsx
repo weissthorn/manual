@@ -285,7 +285,7 @@ export default function Manual() {
     .sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix())
     .reverse();
   sections = sections.map((item, key) => (
-    <Collapse title={item.title} initialVisible={item.contents.length ? true : false}>
+    <Collapse key={item.id} title={item.title} initialVisible={item.contents.length ? true : false}>
       {getContent(item.contents, manual.slug)}
       <Button
         scale={0.5}
@@ -439,7 +439,6 @@ export default function Manual() {
           <div className="search">
             <Input
               icon={<Search />}
-              auto
               placeholder={`Search manual....`}
               onChange={(e) => searchContent(e.target.value)}
             />
