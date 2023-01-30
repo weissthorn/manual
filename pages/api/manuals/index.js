@@ -4,7 +4,7 @@ import logger from '../../../util/log';
 import moment from 'moment';
 
 const getManuals = async (req, res) => {
-  // await withAuth(req, res);
+  await withAuth(req, res);
 
   Manual.orderBy(r.desc('createdAt'))
     .getJoin()
