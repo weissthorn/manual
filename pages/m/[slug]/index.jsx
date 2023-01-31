@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { parseCookies } from 'nookies';
+import NextLink from 'next/link';
 import {
   Button,
   Card,
@@ -108,14 +109,15 @@ export default function Manual() {
       .sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix())
       .reverse();
     let url = contents.map((item, key) => (
-      <a
-        href={`/m/${title}/${item.slug}`}
-        id={`${item.slug}`}
-        key={key}
-        className={`${chapter === item.slug ? 'active' : ''}`}
-      >
-        {item.title}
-      </a>
+      <NextLink href={`/m/${title}/${item?.slug}`} legacyBehavior>
+        <a
+          id={`${item?.slug}`}
+          key={item.id}
+          className={`${chapter === item?.slug ? 'active' : ''}`}
+        >
+          {item.title}
+        </a>
+      </NextLink>
     ));
 
     return url;
@@ -483,35 +485,32 @@ export default function Manual() {
         <div className="footer">
           <Divider />
 
-          <Button
-            auto
-            iconRight={<ChevronRight />}
-            style={{
-              float: 'right',
-              display:
-                manual &&
-                manual.sections &&
-                manual.sections.length &&
-                manual.sections[0].contents[0]
-                  ? 'inline-block'
-                  : 'none',
-            }}
+          <NextLink
+            href={
+              manual && manual.sections && manual.sections.length && manual.sections[0].contents[0]
+                ? `/m/${manual.slug}/${manual.sections[0].contents[0].slug}`
+                : ''
+            }
           >
-            <Link
-              href={
-                manual &&
-                manual.sections &&
-                manual.sections.length &&
-                manual.sections[0].contents[0]
-                  ? `/m/${manual.slug}/${manual.sections[0].contents[0].slug}`
-                  : ''
-              }
+            <Button
+              auto
+              iconRight={<ChevronRight />}
+              style={{
+                float: 'right',
+                display:
+                  manual &&
+                  manual.sections &&
+                  manual.sections.length &&
+                  manual.sections[0].contents[0]
+                    ? 'inline-block'
+                    : 'none',
+              }}
             >
               {manual && manual.sections && manual.sections.length && manual.sections[0].contents[0]
                 ? manual.sections[0].contents[0].title
                 : ''}
-            </Link>
-          </Button>
+            </Button>
+          </NextLink>
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@ const getManual = async (req, res, next) => {
   await withAuth(req, res, next);
 
   const { slug } = req.query;
-  Manual.filter({ slug })
+  await Manual.filter({ slug })
     .getJoin()
     .then((data) => {
       if (data.length) {

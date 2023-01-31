@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Link } from '@geist-ui/core';
 import { ChevronLeft, ChevronRight } from '@geist-ui/icons';
+import NextLink from 'next/link';
 
 const prevTitle = (manual, content) => {
   const sections = manual.sections;
@@ -156,13 +157,17 @@ const link = (manual, content, forward) => {
 const NavigationButton = ({ manual, content, forward }) => (
   <>
     {forward ? (
-      <Button auto iconRight={<ChevronRight />} style={{ float: 'right' }}>
-        <Link href={link(manual, content, forward)}>{title(manual, content, forward)}</Link>
-      </Button>
+      <NextLink href={`${link(manual, content, forward)}`}>
+        <Button auto iconRight={<ChevronRight />} style={{ float: 'right' }}>
+          {title(manual, content, forward)}
+        </Button>
+      </NextLink>
     ) : (
-      <Button auto icon={<ChevronLeft />}>
-        <Link href={link(manual, content, forward)}>{title(manual, content, forward)}</Link>
-      </Button>
+      <NextLink href={`${link(manual, content, forward)}`}>
+        <Button auto icon={<ChevronLeft />}>
+          {`${title(manual, content, forward)}`}
+        </Button>
+      </NextLink>
     )}
   </>
 );

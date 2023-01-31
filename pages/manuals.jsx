@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { Button, Card, Input, Textarea, Link, Spacer, Modal, Loading } from '@geist-ui/core';
+import NextLink from 'next/link';
 import Header from '../components/Header';
 import useToken from '../components/Token';
 
@@ -73,9 +74,9 @@ export default function Manuals() {
           <div style={{ height: 50 }}>{item.description}</div>
           <Spacer />
 
-          <Link className="custom-btn" href={`/m/${item.slug}`}>
-            View &rarr;
-          </Link>
+          <NextLink href={`/m/${item.slug}`}>
+            <Link className="custom-btn">View &rarr;</Link>
+          </NextLink>
         </div>
       </Card>
     </div>

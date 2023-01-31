@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Popover, User, Link } from '@geist-ui/core';
 import { ChevronDown } from '@geist-ui/icons';
+import NextLink from 'next/link';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { destroyCookie } from 'nookies';
@@ -42,7 +43,9 @@ export default function ManualHeader({ title, description }) {
                 {user.role === 'admin' ? (
                   <div>
                     <Popover.Item>
-                      <Link href="/admin">Admin</Link>
+                      <NextLink href="/admin">
+                        <Link>Admin</Link>
+                      </NextLink>
                     </Popover.Item>
                     <Popover.Item line />
                   </div>
@@ -50,7 +53,9 @@ export default function ManualHeader({ title, description }) {
                   ''
                 )}
                 <Popover.Item>
-                  <Link href="/manuals">Manuals</Link>
+                  <NextLink href="/manuals">
+                    <Link>Manuals</Link>
+                  </NextLink>
                 </Popover.Item>
                 <Popover.Item line />
                 <Popover.Item onClick={logout}>
@@ -70,7 +75,9 @@ export default function ManualHeader({ title, description }) {
           </Popover>
         </div>
       ) : (
-        <Link href="/login">Login</Link>
+        <NextLink href="/login">
+          <Link>Login</Link>
+        </NextLink>
       )}
     </div>
   );
