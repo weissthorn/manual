@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { parseCookies } from 'nookies';
+import NextLink from 'next/link';
 import {
   Button,
   Card,
@@ -116,14 +117,15 @@ export default function Chapter() {
       .sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix())
       .reverse();
     let url = contents.map((item, key) => (
-      <a
-        href={`/m/${title}/${item.slug}`}
-        id={`${item.slug}`}
-        key={item.id}
-        className={`${chapter === item.slug ? 'active' : ''}`}
-      >
-        {item.title}
-      </a>
+      <NextLink href={`/m/${title}/${item?.slug}`} legacyBehavior>
+        <a
+          id={`${item?.slug}`}
+          key={item.id}
+          className={`${chapter === item?.slug ? 'active' : ''}`}
+        >
+          {item.title}
+        </a>
+      </NextLink>
     ));
 
     return url;

@@ -1,0 +1,48 @@
+ReqlServerError: The connection was closed before the query could be completed for:
+r.table("manuals").orderBy(r.desc("createdAt")).merge(function(var_5) {
+    return r.branch(var_5.hasFields("user"), r.table("users").getAll(var_5("user"), {
+        index: "id"
+    }).coerceTo("ARRAY").do(function(var_6) {
+        return r.branch(var_6.count().eq(1), r.object("author", var_6.nth(0)), r.branch(var_6.count().eq(0), {}, r.error(r.expr("More than one element found for ").add(var_5.coerceTo("STRING")).add(r.expr("for the field ").add("author")))))
+    }), {})
+}).merge(function(var_7) {
+    return r.branch(var_7.hasFields("id"), r.object("sections", r.table("sections").getAll(var_7("id"), {
+        index: "manualId"
+    }).merge(function(var_8) {
+        return r.branch(var_8.hasFields("id"), r.object("contents", r.table("contents").getAll(var_8("id"), {
+            index: "sectionId"
+        }).coerceTo("ARRAY")), {})
+    }).coerceTo("ARRAY")), {})
+})... => Jan 30, 2023 @ 09:39:22 PM 
+ReqlServerError: The connection was closed before the query could be completed for:
+r.table("manuals").orderBy(r.desc("createdAt")).merge(function(var_9) {
+    return r.branch(var_9.hasFields("user"), r.table("users").getAll(var_9("user"), {
+        index: "id"
+    }).coerceTo("ARRAY").do(function(var_10) {
+        return r.branch(var_10.count().eq(1), r.object("author", var_10.nth(0)), r.branch(var_10.count().eq(0), {}, r.error(r.expr("More than one element found for ").add(var_9.coerceTo("STRING")).add(r.expr("for the field ").add("author")))))
+    }), {})
+}).merge(function(var_11) {
+    return r.branch(var_11.hasFields("id"), r.object("sections", r.table("sections").getAll(var_11("id"), {
+        index: "manualId"
+    }).merge(function(var_12) {
+        return r.branch(var_12.hasFields("id"), r.object("contents", r.table("contents").getAll(var_12("id"), {
+            index: "sectionId"
+        }).coerceTo("ARRAY")), {})
+    }).coerceTo("ARRAY")), {})
+})... => Jan 30, 2023 @ 09:39:42 PM 
+ReqlServerError: The connection was closed before the query could be completed for:
+r.table("manuals").orderBy(r.desc("createdAt")).merge(function(var_13) {
+    return r.branch(var_13.hasFields("user"), r.table("users").getAll(var_13("user"), {
+        index: "id"
+    }).coerceTo("ARRAY").do(function(var_14) {
+        return r.branch(var_14.count().eq(1), r.object("author", var_14.nth(0)), r.branch(var_14.count().eq(0), {}, r.error(r.expr("More than one element found for ").add(var_13.coerceTo("STRING")).add(r.expr("for the field ").add("author")))))
+    }), {})
+}).merge(function(var_15) {
+    return r.branch(var_15.hasFields("id"), r.object("sections", r.table("sections").getAll(var_15("id"), {
+        index: "manualId"
+    }).merge(function(var_16) {
+        return r.branch(var_16.hasFields("id"), r.object("contents", r.table("contents").getAll(var_16("id"), {
+            index: "sectionId"
+        }).coerceTo("ARRAY")), {})
+    }).coerceTo("ARRAY")), {})
+})... => Jan 30, 2023 @ 10:52:30 PM 

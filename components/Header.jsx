@@ -1,6 +1,7 @@
 import React from 'react';
 import { Popover, User, Link } from '@geist-ui/core';
 import { ChevronDown } from '@geist-ui/icons';
+import NextLink from 'next/link';
 import Head from 'next/head';
 import { destroyCookie } from 'nookies';
 import { useRouter } from 'next/router';
@@ -36,7 +37,9 @@ export default function MainHeader({ title, description }) {
       </Head>
       <div className="navbar">
         <div className="inner">
-          <Link href="/">Manual</Link>
+          <NextLink href="/">
+            <Link>Manual</Link>
+          </NextLink>
 
           <div className="right">
             <Popover
@@ -45,7 +48,9 @@ export default function MainHeader({ title, description }) {
                   {user.role === 'admin' ? (
                     <>
                       <Popover.Item>
-                        <Link href="/admin">Admin</Link>
+                        <NextLink href="/admin">
+                          <Link>Admin</Link>
+                        </NextLink>
                       </Popover.Item>
                       <Popover.Item line />
                     </>
@@ -53,7 +58,9 @@ export default function MainHeader({ title, description }) {
                     ''
                   )}
                   <Popover.Item>
-                    <Link href="/manuals">Manuals</Link>
+                    <NextLink href="/manuals">
+                      <Link>Manuals</Link>
+                    </NextLink>
                   </Popover.Item>
                   <Popover.Item line />
                   <Popover.Item onClick={logout}>
