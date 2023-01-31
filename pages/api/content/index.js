@@ -4,7 +4,7 @@ import logger from '../../../util/log';
 import moment from 'moment';
 
 const getContents = async (req, res) => {
-  await withAuth(req, res);
+  // await withAuth(req, res);
 
   Content.orderBy(r.desc('createdAt'))
     .getJoin()
